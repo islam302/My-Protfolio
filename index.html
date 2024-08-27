@@ -2,7 +2,7 @@
 
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -284,7 +284,7 @@
       }
       .microphone-icon.start {
         background-color: #cfd0e7;
-        color: #007057;
+        color: #1d3b34;
       }
       .microphone-icon.stop {
         background-color: #007057;
@@ -393,7 +393,7 @@
   <body>
     <div class="chat-icon" id="chat-icon">
       <img
-        src="https://cdn-icons-png.flaticon.com/128/8943/8943377.png"
+        src="https://t4.ftcdn.net/jpg/02/14/06/59/360_F_214065903_0DiL7CSBjAEOPDUqXlgnhkh2j4nmgCWX.jpg"
         alt="Chat Icon"
         class="chat-icon-img rotate-close md:h-[60px] md:w-[60px] sm:h-[40px] sm:w-[40px] h-[30px] w-[30px]"
         id="chat-icon-img"
@@ -635,17 +635,6 @@
         recognition.onerror = function (event) {
           console.error("Speech recognition error:", event.error);
         };
-
-        // Logic for listening to the answer
-        const synth = window.speechSynthesis;
-        $("#chat-box").on("click", ".listen-btn", function () {
-          const text = $(this).data("answer");
-          if (text) {
-            const msg = new SpeechSynthesisUtterance(text);
-            msg.lang = "ar"; // Arabic language
-            window.speechSynthesis.speak(msg);
-          }
-        });
       });
     </script>
   </body>

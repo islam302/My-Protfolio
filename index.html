@@ -1,6 +1,664 @@
+<!--una chatbot-->
+
+
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
+    <!-- Font -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Bootstrap CSS -->
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+    />
+
+    <!-- Tailwind CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+
+
+
+    <style>
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+        font-family: "Tajawal", sans-serif; /* استخدام Tajawal كخط افتراضي */
+      }
+      .content {
+        flex: 1; /* يضمن أن المحتوى يمتد ليأخذ المساحة المتاحة قبل الفوتر */
+      }
+      .chat-icon {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        /* background-color: #84cc16 ; */
+        color: #ffffff;
+        border-radius: 50%;
+        width: 60px;
+        height: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+        transition: transform 0.3s, box-shadow 0.3s, background-color 0.3s;
+        z-index: 999;
+      }
+      .chat-icon:hover {
+        transform: scale(1.05);
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4);
+      }
+      .chat-icon-img {
+        width: 60px; /* Adjust width to fit your design */
+        height: 60px; /* Adjust height to fit your design */
+        border-radius: 50%;
+        object-fit: cover; /* Ensures the image covers the space without distortion */
+      }
+      .chat-icon-img.open {
+        animation: rotate 0.5s ease;
+      }
+      .rotate-close {
+        animation: rotaterev 0.5s ease;
+      }
+      .chat-container {
+        position: fixed;
+        bottom: 15px;
+        right: 20px;
+        max-width: 500px;
+        height: 400px;
+        justify-content: space-between;
+        /* width: 100%; */
+        background-color: #fff;
+        border-radius: 20px;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        display: none;
+        flex-direction: column;
+        transition: transform 0.4s ease, opacity 0.4s ease, box-shadow 0.4s ease;
+        transform: translateY(120%);
+        opacity: 0;
+        z-index: 1000;
+      }
+      .chat-container.open {
+        display: flex;
+        transform: translateY(-90px);
+        opacity: 1;
+        /* animation: fadeIn 0.4s ease; */
+        animation: hopen 0.5s ease;
+        box-shadow: 0 20px 30px rgba(0, 0, 0, 0.4);
+      }
+      .chat-box {
+        max-height: 600px;
+        overflow-y: auto;
+        padding: 20px;
+        border-radius: 0 0 20px 20px;
+        background-size: contain; /* لجعل الخلفية تغطي كامل مساحة الشات */
+        animation: fadeIn 0.5s ease;
+        display: flex; /* تمكين خصائص flex */
+        flex-direction: column; /* ترتيب العناصر عمودياً */
+      }
+      .question,
+      .answer {
+        font-family: "Tajawal", sans-serif;
+        margin: 10px 0;
+        padding: 12px 18px;
+        border-radius: 20px;
+        max-width: 80%;
+        word-wrap: break-word;
+        line-height: 1.5;
+        animation: fadeIn 0.5s ease;
+        display: inline-block;
+        position: relative;
+      }
+      .question {
+        background-color: #007057;
+        color: white;
+        align-self: flex-end; /* دفع الرسالة إلى الجهة اليمنى */
+        text-align: left;
+        border-radius: 20px 20px 0 20px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        margin-left: auto; /* دفع العنصر إلى الجهة اليمنى */
+      }
+      .answer {
+        display: relative;
+        background-color: #f5f5f5;
+        color: #000;
+        align-self: flex-start; /* دفع الرد إلى الجهة اليسرى */
+        text-align: left;
+        border-radius: 20px 20px 20px 0;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        margin-right: auto; /* دفع العنصر إلى الجهة اليسرى */
+        position: relative;
+        display: flex; /* إضافة flex لتمكين التوزيع */
+        flex-direction: row; /* جعل العناصر بجانب بعضها البعض */
+        align-items: center; /* توسيط العناصر عمودياً */
+      }
+      .similar-questions {
+        margin: 10px 0;
+      }
+      .similar-questions button {
+        margin: 5px 0;
+        display: block;
+        width: 100%;
+        text-align: left;
+        border-radius: 12px;
+        background-color: #e0f7fa;
+        color: #007057;
+        border: 1px solid #007057;
+        transition: background-color 0.3s, color 0.3s;
+        padding: 10px;
+        font-size: 14px;
+      }
+      .similar-questions button:hover {
+        background-color: #007057;
+        color: white;
+      }
+      .loading {
+        display: flex; /* Ensure the container is flexible */
+        justify-content: center; /* Center the dots horizontally */
+        align-items: center; /* Center the dots vertically */
+        height: 50px; /* Adjust height as needed */
+        padding: 20px; /* Adjust padding for spacing */
+        visibility: hidden; /* Hide by default */
+      }
+      .loading.show {
+        visibility: visible; /* Show loading dots when active */
+      }
+      .dot {
+        width: 10px; /* Dot width */
+        height: 10px; /* Dot height */
+        margin: 0 5px; /* Space between dots */
+        background-color: #000; /* Dot color */
+        border-radius: 50%; /* Make dots circular */
+        display: inline-block;
+        animation: bounce 1.5s infinite; /* Animation properties */
+      }
+      .dot:nth-child(2) {
+        animation-delay: 0.3s; /* Delay for the second dot */
+      }
+      .dot:nth-child(3) {
+        animation-delay: 0.6s; /* Delay for the third dot */
+      }
+      @keyframes bounce {
+        0%,
+        80%,
+        100% {
+          transform: scale(0);
+        }
+        40% {
+          transform: scale(1);
+        }
+      }
+      .input-group {
+        margin-top: 5px;
+        display: flex;
+        align-items: center;
+      }
+      .input-group input {
+        border: 2px solid #007057;
+        color: #000;
+        background-color: #fff;
+        padding: 10px;
+        font-size: 14px;
+        flex: 1;
+        transition: border-color 0.3s;
+      }
+      .input-group input:focus {
+        border-color: #007057; /* Darker green */
+        outline: none;
+      }
+      .input-group-append {
+        display: flex;
+      }
+      .input-group-append .btn-primary {
+        background: linear-gradient(
+          145deg,
+          #007057,
+          #007057
+        ); /* Gradient background for a modern look */
+        border: none; /* Remove the border for a cleaner look */
+        color: white; /* Text color */
+        border-radius: 50%; /* Keep the button circular */
+        width: 50px; /* Button width */
+        height: 50px; /* Button height */
+        font-size: 16px; /* Text size */
+        transition: all 0.3s ease-in-out; /* Smooth transition for hover effects */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.15); /* Add a subtle shadow for depth */
+        padding: 0; /* Ensure the icon or text is centered */
+      }
+      .input-group-append .btn-primary:hover {
+        background: linear-gradient(
+          145deg,
+          #007057,
+          #007057
+        ); /* Inverse gradient on hover */
+        box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.2); /* Increase shadow on hover */
+        transform: translateY(-2px); /* Slight lift on hover */
+      }
+      .input-group-append .btn-primary:active {
+        background-color: #007057; /* Maintain color on click */
+        border-color: #007057; /* Maintain border color on click */
+        box-shadow: none; /* Remove shadow on click */
+        transform: translateY(0); /* Reset lift on click */
+      }
+      .microphone-container {
+        position: fixed;
+        bottom: 80px;
+        right: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+        z-index: 1000;
+      }
+      .microphone-icon {
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        transition: transform 0.3s, box-shadow 0.3s, background-color 0.3s;
+        font-size: 24px;
+        border: #000;
+      }
+      .microphone-icon.start {
+        background-color: #cfd0e7;
+        color: #007057;
+      }
+      .microphone-icon.stop {
+        background-color: #007057;
+        color: #fff;
+      }
+      .chat-header {
+        font-family: "Tajawal", sans-serif;
+        display: flex;
+        flex-direction: row;
+        height: 80px;
+        background-color: #007057;
+        color: white;
+        border-radius: 20px 20px 0 0;
+        text-align: center;
+        font-weight: bold;
+        position: relative;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+      @keyframes hopen {
+        from {
+          height: 100px;
+        }
+        to {
+          height: 400px;
+        }
+      }
+      @keyframes hopenrev {
+        from {
+          height: 400px;
+        }
+        to {
+          height: 100px;
+        }
+      }
+      @keyframes rotate {
+        from {
+          rotate: 0deg;
+        }
+        to {
+          rotate: 360deg;
+        }
+      }
+      @keyframes rotaterev {
+        from {
+          rotate: 0deg;
+        }
+        to {
+          rotate: -360deg;
+        }
+      }
+      .chat-footer {
+        font-family: "Tajawal", sans-serif;
+        display: flex;
+        border-top: 1px solid #f1f1f1;
+        padding: 10px;
+        background-color: #fff;
+        border-radius: 0 0 15px 15px;
+      }
+      .chat-footer input {
+        border: 2px solid #007057;
+        border-radius: 15px;
+        padding: 10px;
+        font-size: 16px;
+        flex: 1;
+        outline: none;
+        margin-right: 10px;
+      }
+      .chat-footer button {
+        background-color: #007057;
+        color: #fff;
+        border: none;
+        border-radius: 15px;
+        padding: 10px 20px;
+        cursor: pointer;
+        font-size: 13px;
+        transition: background-color 0.3s;
+      }
+      .chat-footer button:hover {
+        background-color: #1d3b34;
+      }
+      .colorSpecial-1 {
+        background: #007057;
+      }
+      .colorSpecial-2 {
+        color: #007057;
+      }
+      @keyframes pulse {
+        50% {
+          opacity: 0.6;
+        }
+      }
+      .microphone-icon.animate-pulse {
+        animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        scale: 1.2;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="chat-icon" id="chat-icon">
+      <img
+        src="https://cdn-icons-png.flaticon.com/128/8943/8943377.png"
+        alt="Chat Icon"
+        class="chat-icon-img rotate-close md:h-[60px] md:w-[60px] sm:h-[40px] sm:w-[40px] h-[30px] w-[30px]"
+        id="chat-icon-img"
+      />
+    </div>
+
+    <div
+      class="chat-container font-semibold lg:w-5/12 md:w-7/12 sm:w-8/12 w-11/12 overflow-hidden"
+      id="chat-container"
+    >
+      <div
+        class="chat-header flex justify-evenly sm:px-10 px-2 w-full mx-auto border-b h-16"
+      >
+        <img
+          src="data:image/jpeg;base64,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"
+          class="w-14 my-auto h-14"
+        />
+        <div
+          class="grid m-auto xs:text-sm text-xs tracking-wide flex-row gap-2"
+        >
+          <p class="inline-block">أنا يونا شات بوت وأنا هنا لمساعدتك</p>
+          <p class="inlne-block">لازلت تحت التدريب</p>
+
+        </div>
+
+        <span
+          id="close-chat"
+          class="border flex flex-col my-auto items-center rounded-full text-center sm:h-10 sm:w-10 h-7 w-7 cursor-pointer text-base sm:text-2xl text-red-700 bg-white"
+          >&times;</span
+        >
+      </div>
+
+      <div class="chat-box" id="chat-box"></div>
+      <div class="loading" id="loading">
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+      </div>
+
+      <div class="chat-footer">
+        <div class="input-group px-2 flex justify-center flex-row">
+          <input
+            type="text"
+            id="user-question"
+            class="h-10 m-auto rounded-md lg:w-8/12 md:w-8/12 w-9/12"
+            placeholder="كيف يمكنني مساعدتك ؟"
+          />
+          <div
+            class="input-group-append my-1 flex justify-evenly lg:w-4/12 md:w-4/12 sm:w-5/12 w-6/12"
+          >
+            <button
+              class="send-btn rounded-md h-10 sm:w-7/12 w-6/12 font-extralight sm:font-semibold text-center text-white"
+              id="send-btn"
+              type="button"
+            >
+              إرسال
+            </button>
+            <div
+              class="microphone-icon stop my-auto w-6/12"
+              id="microphone-icon"
+            >
+              <i class="fas fa-microphone"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="microphone-container">
+    </div>
+    <div class="content">
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script>
+      $(document).ready(function () {
+        // Toggle chat container
+        $("#chat-icon").click(function () {
+          $("#chat-icon-img").toggleClass("rotate-close");
+          $("#chat-icon-img").toggleClass("open");
+          $("#chat-container").toggleClass("open");
+        });
+
+        // Close chat container
+        $("#close-chat").click(function () {
+          $("#chat-icon-img").toggleClass("rotate-close");
+          $("#chat-icon-img").toggleClass("open");
+          $("#chat-container").toggleClass("open");
+          // $("#chat-container").removeClass("open");
+          // $("#chat-icon-img").removeClass("open");
+        });
+
+        // Function to send the question
+        function sendQuestion() {
+          let question = $("#user-question").val();
+          if (question.trim() === "") return;
+
+          // Show loading animation
+          $("#loading").addClass("show");
+
+          // Append the user question
+          $("#chat-box").append(`<div class="question">${question}</div>`);
+          $("#user-question").val("");
+          $("#chat-box").scrollTop($("#chat-box")[0].scrollHeight); // Auto-scroll to the bottom
+
+          $.ajax({
+            url: "https://unachatbot.onrender.com/ask_questions",
+            type: "POST",
+            contentType: "application/json",
+            data: JSON.stringify({ question: question }),
+            headers: {
+              "X-CSRFToken": $("meta[name='csrf-token']").attr("content"),
+            },
+
+            success: function (response) {
+              if (response.similar_questions) {
+                $("#chat-box").append(
+                  '<div class="answer">Did you mean?</div>'
+                );
+                response.similar_questions.forEach(function (q) {
+                  $("#chat-box").append(`
+                    <div class="similar-questions" id="similar-questions-${q.id}">
+                      <button class="btn btn-link" data-id="${q.id}" data-answer="${q.answer}">${q.question}</button>
+                    </div>`);
+                });
+
+                // Attach event handler for dynamic buttons
+                $(".btn-link").click(function () {
+                  let question_id = $(this).data("id");
+                  handleSimilarQuestion(question_id);
+                });
+              } else if (response.answer) {
+                $("#chat-box").append(
+                  `<div class="answer">${response.answer}</div>`
+                );
+              } else {
+                $("#chat-box").append(
+                  '<div class="answer">Sorry, I do not have an answer for that.</div>'
+                );
+              }
+              $("#chat-box").scrollTop($("#chat-box")[0].scrollHeight);
+
+              // Hide loading animation after receiving response
+              $("#loading").removeClass("show");
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+              console.error("AJAX request failed:", {
+                status: jqXHR.status,
+                statusText: textStatus,
+                error: errorThrown,
+                responseText: jqXHR.responseText,
+              });
+
+              $("#chat-box").append(`
+    <div class="answer">
+      An error occurred while fetching the answer.<br>
+      <strong>Status:</strong> ${jqXHR.status}<br>
+      <strong>Text:</strong> ${textStatus}<br>
+      <strong>Error:</strong> ${errorThrown}<br>
+      <strong>Response:</strong> ${jqXHR.responseText}<br>
+      Please try again later.
+    </div>
+  `);
+              $("#chat-box").scrollTop($("#chat-box")[0].scrollHeight);
+
+              // Hide the loading animation
+              $("#loading").removeClass("show");
+            },
+          });
+        }
+
+        // Send question on button click
+        $("#send-btn").click(function () {
+          sendQuestion();
+        });
+
+        // Send question on Enter key press
+        $("#user-question").keypress(function (event) {
+          if (event.which === 13) {
+            // Enter key code
+            event.preventDefault(); // Prevent default form submission
+            sendQuestion();
+          }
+        });
+
+        function handleSimilarQuestion(question_id) {
+          $.get(
+            "{% url 'http://127.0.0.1:8000/ask_questions' %}",
+            { question_id: question_id },
+            function (response) {
+              if (response.answer) {
+                $("#chat-box").append(
+                  `<div class="answer">${response.answer}<div class="listen-btn" data-answer="${response.answer}"><i class="fas fa-volume-up"></i></div></div>`
+                );
+              } else {
+                $("#chat-box").append(
+                  '<div class="answer">Sorry, I could not find the answer for that question.</div>'
+                );
+                console.error("Answer not found for similar question");
+              }
+              $("#chat-box").scrollTop($("#chat-box")[0].scrollHeight);
+            }
+          ).fail(function (jqXHR, textStatus, errorThrown) {
+            $("#chat-box").append(
+              '<div class="answer">An error occurred while fetching the answer.</div>'
+            );
+            console.error("Failed to fetch answer:", textStatus, errorThrown);
+          });
+        }
+
+        // Microphone recording logic
+        const recognition = new (window.SpeechRecognition ||
+          window.webkitSpeechRecognition)();
+        recognition.lang = "ar"; // Arabic language
+        recognition.continuous = false;
+
+        // Start recording on mouse down
+        $("#microphone-icon").mousedown(function () {
+          recognition.start();
+          $("#microphone-icon").addClass("start");
+          $("#microphone-icon").removeClass("stop");
+          $("#microphone-icon").addClass("animate-pulse");
+        });
+
+        // Stop recording on mouse up
+        $("#microphone-icon").mouseup(function () {
+          recognition.stop();
+          $("#microphone-icon").removeClass("start");
+          $("#microphone-icon").addClass("stop");
+          $("#microphone-icon").removeClass("animate-pulse");
+        });
+
+        recognition.onresult = function (event) {
+          const transcript = event.results[0][0].transcript;
+          $("#user-question").val(transcript);
+          sendQuestion();
+        };
+
+        recognition.onerror = function (event) {
+          console.error("Speech recognition error:", event.error);
+        };
+
+        // Logic for listening to the answer
+        const synth = window.speechSynthesis;
+        $("#chat-box").on("click", ".listen-btn", function () {
+          const text = $(this).data("answer");
+          if (text) {
+            const msg = new SpeechSynthesisUtterance(text);
+            msg.lang = "ar"; // Arabic language
+            window.speechSynthesis.speak(msg);
+          }
+        });
+      });
+    </script>
+  </body>
+</html>
+
+
+<!--una chatbot-->
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge">

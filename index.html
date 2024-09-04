@@ -1,3 +1,6 @@
+<!DOCTYPE html>
+<html lang="en">
+
 <!--una chatbot-->
 
 <!DOCTYPE html>
@@ -515,7 +518,7 @@
           $("#chat-box").scrollTop($("#chat-box")[0].scrollHeight); // التمرير تلقائياً إلى الأسفل
 
           $.ajax({
-            url: "https://unachatbot.onrender.com/ask_questions",
+            url: "https://islamchatbot.onrender.com/ask_questions/",
             type: "POST",
             contentType: "application/json",
             data: JSON.stringify({ question: question }),
@@ -582,7 +585,7 @@
 
         function handleSimilarQuestion(question_id) {
           $.get(
-            "{% url 'http://127.0.0.1:8000/ask_questions' %}",
+            "{% url 'https://islamchatbot.onrender.com/ask_questions/' %}",
             { question_id: question_id },
             function (response) {
               if (response.answer) {
@@ -662,9 +665,6 @@
 
 <!--una chatbot-->
 
-
-<!DOCTYPE html>
-<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -1108,7 +1108,7 @@
           <!-- Heading -->
           <div class="position-relative d-flex text-center mb-5">
             <h2 class="text-24 text-white-50 opacity-1 text-uppercase fw-600 w-100 mb-0">Portfolio</h2>
-            <p class="text-9 text-white fw-600 position-absolute w-100 align-self-center lh-base mb-0">My Work<span
+            <p class="text-9 text-white fw-600 position-absolute w-100 align-self-center lh-base mb-0">My Projects<span
                 class="heading-separator-line border-bottom border-3 border-primary d-block mx-auto"></span> </p>
           </div>
           <!-- Heading end-->
@@ -1116,20 +1116,81 @@
           <!-- Filter Menu -->
           <ul class="portfolio-menu nav nav-tabs nav-light justify-content-center border-bottom-0 mb-5">
             <li class="nav-item"> <a data-filter="*" class="nav-link active" href="">All</a></li>
-            <li class="nav-item"> <a data-filter=".backend" href="" class="nav-link">Backend</a></li>
+            <li class="nav-item"> <a data-filter=".Web" href="" class="nav-link">Web Apps</a></li>
             <li class="nav-item"> <a data-filter=".Automation" href="" class="nav-link">Automation-Web_Scraping-Data_Analyst</a></li>
             <!-- <li class="nav-item"> <a data-filter=".photos" href="" class="nav-link">Photos</a></li> -->
           </ul>
           <!-- Filter Menu end -->
           <div>
+
             <div class="row portfolio-filter g-4">
 
-              <div class="col-sm-6 col-lg-4 backend">
+              <div class="col-sm-6 col-lg-4 Web">
+                <div class="portfolio-box rounded">
+                  <div class="portfolio-img rounded"> <img class="img-fluid d-block" src="images/projects/omnifood.png"
+                      alt="Omnifood">
+                    <div class="portfolio-overlay"> <a class="popup-ajax stretched-link"
+                        href="https://omnifood-sable-xi.vercel.app/" target="_blank"></a>
+                      <div class="portfolio-overlay-details">
+                        <h5 class="text-white fw-400">OmniFood</h5>
+                        <span class="text-light">React | Html | Css | JS | Bootstrap </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-sm-6 col-lg-4 Web">
+                <div class="portfolio-box rounded">
+                  <div class="portfolio-img rounded"> <img class="img-fluid d-block" src="images/projects/alyan.png"
+                      alt="Aliyn">
+                    <div class="portfolio-overlay"> <a class="popup-ajax stretched-link"
+                        href="https://aliyn-portfolio.vercel.app/" target="_blank"></a>
+                      <div class="portfolio-overlay-details">
+                        <h5 class="text-white fw-400">Aliyn</h5>
+                        <span class="text-light">React | Html | Css | JS | Bootstrap </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-sm-6 col-lg-4 Web">
+                <div class="portfolio-box rounded">
+                  <div class="portfolio-img rounded"> <img class="img-fluid d-block" src="images/projects/soicalmagic.png"
+                      alt="soicalmagic">
+                    <div class="portfolio-overlay">
+                      <a class="popup-ajax stretched-link" href="https://soicalmagic.com/" target="_blank"></a>
+                      <div class="portfolio-overlay-details">
+                        <h5 class="text-white fw-400">SoicalMagic</h5>
+                        <span class="text-light">React | Html | Css | JS | Bootstrap </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-sm-6 col-lg-4 Web">
+                <div class="portfolio-box rounded">
+                  <div class="portfolio-img rounded"> <img class="img-fluid d-block" src="images/projects/graph.png"
+                      alt="Graphic Designer Site">
+                    <div class="portfolio-overlay"> <a class="popup-ajax stretched-link"
+                        href="https://mahmoudfawzy.net/" target="_blank"></a>
+                      <div class="portfolio-overlay-details">
+                        <h5 class="text-white fw-400">Graphic Designer Site</h5>
+                        <span class="text-light">React | Html | Css | JS | Bootstrap </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-sm-6 col-lg-4 Web">
                 <div class="portfolio-box rounded">
                   <div class="portfolio-img rounded"> <img class="img-fluid d-block" src="images/projects/ecommerce.png"
                       alt="E-commerce">
                     <div class="portfolio-overlay"> <a class="popup-ajax stretched-link"
-                        href="https://github.com/islam302/Complete-Market-System"></a>
+                        href="https://t-empire.netlify.app/" target="_blank"></a>
                       <div class="portfolio-overlay-details">
                         <h5 class="text-white fw-400">E-commerce</h5>
                         <span class="text-light">Python | Django | DRF</span>
@@ -1139,7 +1200,7 @@
                 </div>
               </div>
 
-              <div class="col-sm-6 col-lg-4 backend">
+              <div class="col-sm-6 col-lg-4 Web">
                 <div class="portfolio-box rounded">
                   <div class="portfolio-img rounded"> <img class="img-fluid d-block"
                       src="images/projects/chatbot.png" alt="">
@@ -1154,7 +1215,7 @@
                 </div>
               </div>
 
-              <div class="col-sm-6 col-lg-4 artwork backend">
+              <div class="col-sm-6 col-lg-4 artwork Web">
                 <div class="portfolio-box rounded">
                   <div class="portfolio-img rounded"> <img class="img-fluid d-block" src="images/projects/airtravel.jpeg"
                       alt="">
@@ -1382,6 +1443,6 @@
 
 
 
-</body>
+  </body>
 
 </html>

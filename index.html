@@ -518,7 +518,7 @@
           $("#chat-box").scrollTop($("#chat-box")[0].scrollHeight); // التمرير تلقائياً إلى الأسفل
 
           $.ajax({
-            url: "https://islamchatbot.onrender.com/ask_questions/",
+            url: "https://unachatbot.onrender.com/ask_questions/",
             type: "POST",
             contentType: "application/json",
             data: JSON.stringify({ question: question }),
@@ -585,7 +585,7 @@
 
         function handleSimilarQuestion(question_id) {
           $.get(
-            "{% url 'https://islamchatbot.onrender.com/ask_questions/' %}",
+            "{% url 'https://unachatbot.onrender.com/ask_questions/' %}",
             { question_id: question_id },
             function (response) {
               if (response.answer) {

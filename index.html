@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 
+
 <!--una chatbot-->
 
 <!DOCTYPE html>
@@ -47,7 +48,6 @@
         position: fixed;
         bottom: 20px;
         right: 20px;
-        /* background-color: #84cc16 ; */
         color: #007057;
         border-radius: 50%;
         width: 60px;
@@ -404,26 +404,6 @@
       class="chat-container font-semibold lg:w-5/12 md:w-7/12 sm:w-8/12 w-11/12 overflow-hidden"
       id="chat-container"
     >
-      <div
-        class="chat-header flex justify-evenly sm:px-10 px-2 w-full mx-auto border-b h-16"
-      >
-
-
-
-        <div
-          class="grid m-auto xs:text-sm text-xs tracking-wide flex-row gap-2"
-        >
-          <p class="inline-block"><img src="https://una-oic.org/wp-content/uploads/2024/08/hed-2.png"></p>
-          <p class="inlne-block">أنا شات بوت يونا .. أنا هنا لمساعدك ولا زلت تحت التدريب</p>
-
-        </div>
-        <span
-          id="close-chat"
-          class="border flex flex-col my-auto items-center rounded-full text-center sm:h-10 sm:w-10 h-7 w-7 cursor-pointer text-base sm:text-2xl text-red-700 bg-white"
-          >&times;</span
-        >
-      </div>
-
       <div class="chat-box" id="chat-box"></div>
       <div class="loading" id="loading">
         <div class="dot"></div>
@@ -467,36 +447,48 @@
 
     <script>
       $(document).ready(function () {
-
         // Toggle chat container
-        $("#chat-icon").click(function () {
+        $("#chat-icon").click(function (e) {
+          e.stopPropagation(); // Prevent click from propagating to the document
           $("#chat-icon-img").toggleClass("rotate-close");
           $("#chat-icon-img").toggleClass("open");
           $("#chat-container").toggleClass("open");
         });
 
-        // Close chat container
+        // Close chat container when clicking outside
+        $(document).click(function (e) {
+          // Check if the click is outside the chat container and the chat icon
+          if (!$(e.target).closest("#chat-container, #chat-icon").length) {
+            if ($("#chat-container").hasClass("open")) {
+              $("#chat-container").removeClass("open");
+              $("#chat-icon-img").removeClass("open").addClass("rotate-close");
+            }
+          }
+        });
+
+        // Close chat container when clicking the close button
         $("#close-chat").click(function () {
           $("#chat-icon-img").toggleClass("rotate-close");
           $("#chat-icon-img").toggleClass("open");
           $("#chat-container").toggleClass("open");
-          // $("#chat-container").removeClass("open");
-          // $("#chat-icon-img").removeClass("open");
         });
-
-
 
         const maxQuestionsPerDay = 50;
         let remainingQuestions = maxQuestionsPerDay;
+        let today = new Date().toISOString().slice(0, 10); // Get today's date in YYYY-MM-DD format
 
-        // تحقق إذا كان هناك قيمة موجودة في Local Storage
-        if (localStorage.getItem("remainingQuestions")) {
-          remainingQuestions = parseInt(localStorage.getItem("remainingQuestions"));
-        } else {
+        // Check if the date in localStorage is the same as today
+        if (localStorage.getItem("lastQuestionDate") !== today) {
+          // If not, reset the questions count for the new day
+          remainingQuestions = maxQuestionsPerDay;
           localStorage.setItem("remainingQuestions", maxQuestionsPerDay);
+          localStorage.setItem("lastQuestionDate", today); // Update the date in localStorage
+        } else {
+          // If the date is the same, get the remaining questions from localStorage
+          remainingQuestions = parseInt(localStorage.getItem("remainingQuestions"));
         }
 
-        // عرض عدد الأسئلة المتبقية
+        // Display remaining questions
         updateRemainingQuestionsDisplay();
 
         // وظيفة إرسال السؤال
@@ -582,7 +574,6 @@
           });
         }
 
-
         function handleSimilarQuestion(question_id) {
           $.get(
             "{% url 'https://islamchatbot.onrender.com/ask_questions/' %}",
@@ -638,25 +629,18 @@
           recognition.start();
           $("#microphone-icon").addClass("start");
           $("#microphone-icon").removeClass("stop");
-          $("#microphone-icon").addClass("animate-pulse");
         });
 
-        // Stop recording on mouse up or touch end
+        // Stop recording on mouse up
         $("#microphone-icon").on("mouseup touchend", function () {
           recognition.stop();
-          $("#microphone-icon").removeClass("start");
           $("#microphone-icon").addClass("stop");
-          $("#microphone-icon").removeClass("animate-pulse");
+          $("#microphone-icon").removeClass("start");
         });
 
         recognition.onresult = function (event) {
-          const transcript = event.results[0][0].transcript;
+          let transcript = event.results[0][0].transcript;
           $("#user-question").val(transcript);
-          sendQuestion();
-        };
-
-        recognition.onerror = function (event) {
-          console.error("Speech recognition error:", event.error);
         };
       });
     </script>
@@ -664,6 +648,7 @@
 </html>
 
 <!--una chatbot-->
+
 
 <head>
   <meta charset="UTF-8" />

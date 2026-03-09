@@ -1,849 +1,928 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link href="images/icon_me2.png" rel="icon" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css">
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" href="images/icon_me2.png">
   <title>Islam Badran</title>
 
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <!-- GSAP -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 
-
-
-  <!-- Start of Async Drift Code -->
   <script>
-    "use strict";
-
-    !function () {
-      var t = window.driftt = window.drift = window.driftt || [];
-      if (!t.init) {
-        if (t.invoked) return void (window.console && console.error && console.error("Drift snippet included twice."));
-        t.invoked = !0, t.methods = ["identify", "config", "track", "reset", "debug", "show", "ping", "page", "hide", "off", "on"],
-          t.factory = function (e) {
-            return function () {
-              var n = Array.prototype.slice.call(arguments);
-              return n.unshift(e), t.push(n), t;
-            };
-          }, t.methods.forEach(function (e) {
-            t[e] = t.factory(e);
-          }), t.load = function (t) {
-            var e = 3e5, n = Math.ceil(new Date() / e) * e, o = document.createElement("script");
-            o.type = "text/javascript", o.async = !0, o.crossorigin = "anonymous", o.src = "https://js.driftt.com/include/" + n + "/" + t + ".js";
-            var i = document.getElementsByTagName("script")[0];
-            i.parentNode.insertBefore(o, i);
-          };
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { 'mont': ['Montserrat', 'sans-serif'] },
+          colors: { 'gold': '#c9a84c', 'dark-bg': '#020617' }
+        }
       }
-    }();
-    drift.SNIPPET_VERSION = '0.3.1';
-    drift.load('fpcmi74myygy');
+    }
   </script>
-  <!-- End of Async Drift Code -->
 
-
-  <meta name="description" content=" My portfolio">
-  <meta name="author" content="harnishdesign.net">
-
-  <!-- Web Fonts -->
-  <link
-    href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
-    rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <style>
-    #visitor-count {
-      font-size: 21px;
-      font-weight: bold;
-      color: #e8e5e5;
-      background-color: #56a377;
-      padding: 50px;
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Montserrat', sans-serif; overflow-x: hidden; }
 
-      text-align: center;
-      border-radius: 50px;
-      /* Adjust the value to control the amount of curvature */
+    /* Smooth scroll */
+    html.lenis, html.lenis body { height: auto; }
+
+    /* Hero animations */
+    @keyframes scanWipe {
+      0% { clip-path: inset(0 0 100% 0); opacity: 0; }
+      15% { opacity: 0.4; }
+      40% { clip-path: inset(0 0 0 0); opacity: 0.4; }
+      60% { clip-path: inset(0 0 0 0); opacity: 0.4; }
+      85% { opacity: 0.4; }
+      100% { clip-path: inset(100% 0 0 0); opacity: 0; }
+    }
+    .animate-scanner { animation: scanWipe 5s ease-in-out infinite; }
+
+    @keyframes techPulse {
+      0% { opacity: 0.2; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(1.02); }
+      100% { opacity: 0.2; transform: scale(1); }
     }
 
-    .social-icon-item {
-      margin-right: 25px;
-      /* Adjust the value to set the desired space between icons */
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-20px); }
     }
 
-    .text-3 {
-      font-size: 1.2rem;
-      /* Adjust the font size as needed */
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
     }
 
-    /* Center the content vertically */
-    #contact {
-      min-height: 100vh;
+    /* Banner text responsive */
+    .banner-text-responsive {
+      font-size: clamp(3rem, 10vw, 10rem);
+      font-weight: 900;
+      line-height: 0.95;
+      letter-spacing: -0.02em;
+    }
+
+    .value-text-responsive {
+      font-size: clamp(1rem, 2.5vw, 1.8rem);
+    }
+
+    .contact-text-responsive {
+      font-size: clamp(2.5rem, 8vw, 8rem);
+    }
+
+    /* Navigation overlay */
+    .nav-overlay {
+      transform: translateX(100%);
+      transition: transform 0.6s cubic-bezier(0.77, 0, 0.175, 1);
+    }
+    .nav-overlay.active { transform: translateX(0); }
+
+    .nav-overlay .nav-link-item {
+      transform: translateX(-20px);
+      opacity: 0;
+      transition: all 0.4s ease;
+    }
+    .nav-overlay.active .nav-link-item {
+      transform: translateX(0);
+      opacity: 1;
+    }
+    .nav-overlay.active .nav-link-item:nth-child(1) { transition-delay: 0.1s; }
+    .nav-overlay.active .nav-link-item:nth-child(2) { transition-delay: 0.15s; }
+    .nav-overlay.active .nav-link-item:nth-child(3) { transition-delay: 0.2s; }
+    .nav-overlay.active .nav-link-item:nth-child(4) { transition-delay: 0.25s; }
+    .nav-overlay.active .nav-link-item:nth-child(5) { transition-delay: 0.3s; }
+    .nav-overlay.active .nav-link-item:nth-child(6) { transition-delay: 0.35s; }
+
+    .nav-info {
+      transform: translateX(-20px);
+      opacity: 0;
+      transition: all 0.5s ease 0.4s;
+    }
+    .nav-overlay.active .nav-info {
+      transform: translateX(0);
+      opacity: 1;
+    }
+
+    /* Hamburger */
+    .hamburger span { transition: all 0.3s ease; }
+    .hamburger.active span:first-child { transform: rotate(45deg) translate(4px, 4px); }
+    .hamburger.active span:last-child { transform: rotate(-45deg) translate(4px, -4px); }
+
+    /* Project hover */
+    .project-item .project-bg {
+      clip-path: polygon(0 100%, 100% 100%, 100% 100%, 0 100%);
+      transition: clip-path 0.4s ease;
+    }
+    .project-item:hover .project-bg {
+      clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+    }
+    .project-item:hover .project-text { color: white; }
+    .project-item:hover .project-content { padding-left: 3rem; padding-right: 3rem; }
+
+    /* Scroll reveal */
+    .reveal-up {
+      opacity: 0;
+      transform: translateY(60px);
+      transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .reveal-up.revealed {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Section header clip */
+    .clip-reveal {
+      clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+    }
+
+    /* Testimonial cards */
+    .testimonial-card {
+      transition: transform 0.3s ease;
+    }
+    .testimonial-card:hover {
+      transform: translateY(-5px);
+    }
+
+    /* Custom scrollbar */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #000; }
+    ::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: #555; }
+
+    /* Preloader */
+    .preloader {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      background: #020617;
       display: flex;
       align-items: center;
+      justify-content: center;
+      transition: opacity 0.5s ease;
     }
-
-    /* Add margin between elements */
-    .mb-3-custom {
-      margin-bottom: 1.5rem;
+    .preloader.hidden { opacity: 0; pointer-events: none; }
+    .preloader-text {
+      font-size: 2rem;
+      font-weight: 700;
+      color: white;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
     }
   </style>
-  <!-- Stylesheet
-============================== -->
-  <!-- Bootstrap -->
-  <link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.min.css" />
-  <!-- Font Awesome Icon -->
-  <link rel="stylesheet" type="text/css" href="font-awesome/css/all.min.css" />
-  <!-- Owl Carousel -->
-  <link rel="stylesheet" type="text/css" href="owl.carousel/assets/owl.carousel.min.css" />
-  <!-- Magnific Popup -->
-  <link rel="stylesheet" type="text/css" href="magnific-popup/magnific-popup.min.css" />
-  <!-- Custom Stylesheet -->
-  <link rel="stylesheet" type="text/css" href="stylesheet.css" />
-  <!-- Colors Css -->
-  <link id="color-switcher" type="text/css" rel="stylesheet" href="#" />
 
-  <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-T2C2M8T99X">
-</script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-T2C2M8T99X');
-</script>
-
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-T2C2M8T99X"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-T2C2M8T99X');
+  </script>
 </head>
 
-<body data-bs-spy="scroll" data-bs-target="#header-nav" data-bs-offset="0">
+<body class="font-mont bg-white text-black">
 
   <!-- Preloader -->
-  <div class="preloader preloader-dark">
-    <div class="lds-ellipsis">
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-    </div>
+  <div class="preloader" id="preloader">
+    <div class="preloader-text">Islam Badran</div>
   </div>
-  <!-- Preloader End -->
 
-  <!-- Document Wrapper
-=============================== -->
-  <div id="main-wrapper">
-    <!-- Header
-  ============================ -->
-    <header id="header" class="sticky-top-slide">
-      <!-- Navbar -->
-    <nav class="primary-menu navbar navbar-expand-lg navbar-dark bg-transparent border-bottom-0">
-    <div class="container-fluid position-relative g-lg-4">
-        <div class="col-auto col-lg-2">
-            <!-- Logo -->
-            <!-- <a class="logo" href="index.html" title="Simone"> <img src="images/logo-light.png" alt="Simone"/> </a>  -->
-            <!-- Logo End -->
-        </div>
-        <div class="col col-lg-8 navbar-accordion">
-            <button class="navbar-toggler ms-auto" type="button" data-bs-toggle="collapse" data-bs-target="#header-nav">
-                <span></span><span></span><span></span>
-            </button>
-            <div id="header-nav" class="collapse navbar-collapse justify-content-center">
-                <ul class="navbar-nav">
-                    <li class="nav-item"><a class="nav-link smooth-scroll active" href="#home">Home</a></li>
-                    <li class="nav-item"><a class="nav-link smooth-scroll" href="#about">About</a></li>
-                    <!-- <li class="nav-item"><a class="nav-link smooth-scroll" href="#services">What I Do</a></li> -->
-                    <li class="nav-item"><a class="nav-link smooth-scroll" href="#resume">Resume</a></li>
-                    <!-- <li class="nav-item"><a class="nav-link smooth-scroll" href="#portfolio">Portfolio</a></li> -->
-                    <li class="nav-item"><a class="nav-link smooth-scroll" href="#testimonial">Client</a></li>
-                    <li class="nav-item"><a class="nav-link smooth-scroll" href="#contact">Contact</a></li>
-                </ul>
-            </div>
-        </div>
-        <div class="col-auto col-lg-2 d-flex justify-content-end align-items-center">
-            <ul class="social-icons social-icons-light d-flex list-unstyled mb-0">
-                <!-- GitHub -->
-                <li class="ms-2">
-                    <a class="social-icon-item" data-bs-toggle="tooltip" href="https://github.com/islam302" target="_blank" title="GitHub">
-                        <i class="fab fa-github" style="font-size:40px"></i>
-                    </a>
-                </li>
-
-                <!-- LinkedIn -->
-                <li class="ms-2">
-                    <a class="social-icon-item" data-bs-toggle="tooltip" href="https://www.linkedin.com/in/islam-badran-39a577225/" target="_blank" title="LinkedIn">
-                        <i class="fab fa-linkedin" style="font-size:40px"></i>
-                    </a>
-                </li>
-
-                <!-- Facebook -->
-                <li class="ms-2">
-                    <a class="social-icon-item" data-bs-toggle="tooltip" href="https://www.facebook.com/islam.badran.77" target="_blank" title="Facebook">
-                        <i class="fab fa-facebook" style="font-size:40px"></i>
-                    </a>
-                </li>
-            </ul>
-        </div>
+  <!-- Navigation Overlay -->
+  <nav class="nav-overlay fixed z-50 flex flex-col justify-between w-full h-full px-10 uppercase bg-black text-white/80 py-28 gap-y-10 md:w-1/2 md:left-1/2" id="navOverlay">
+    <div class="flex flex-col text-4xl gap-y-2 md:text-6xl lg:text-7xl">
+      <div class="nav-link-item"><a class="transition-all duration-300 cursor-pointer hover:text-white" onclick="navigateTo('home')">home</a></div>
+      <div class="nav-link-item"><a class="transition-all duration-300 cursor-pointer hover:text-white" onclick="navigateTo('services')">services</a></div>
+      <div class="nav-link-item"><a class="transition-all duration-300 cursor-pointer hover:text-white" onclick="navigateTo('about')">about</a></div>
+      <div class="nav-link-item"><a class="transition-all duration-300 cursor-pointer hover:text-white" onclick="navigateTo('projects')">projects</a></div>
+      <div class="nav-link-item"><a class="transition-all duration-300 cursor-pointer hover:text-white" onclick="navigateTo('testimonials')">clients</a></div>
+      <div class="nav-link-item"><a class="transition-all duration-300 cursor-pointer hover:text-white" onclick="navigateTo('contact')">contact</a></div>
     </div>
-</nav>
-
-
-      <!-- Navbar End -->
-    </header>
-    <!-- Header End -->
-    <!-- Content
-  ============================================= -->
-    <div id="content" role="main">
-
-      <!-- Intro
-    ============================================= -->
-      <section id="home">
-        <div class="hero-wrap">
-          <div class="hero-mask opacity-8 bg-dark"></div>
-          <div class="hero-bg parallax" style="background-image:url('images/islam.png');"></div>
-          <div class="hero-content section d-flex min-vh-100">
-            <div class="container my-auto">
-              <div class="row">
-                <div class="col-12 text-center">
-                  <div class="typed-strings">
-                    <p>I'm Islam Badran</p>
-                    <p>I'm a Python Developer.</p>
-                    <p>I'm a Freelancer.</p>
-
-
-
-
-
-
-
-
-
-                  </div>
-                  <p class="text-7 fw-500 text-white mb-2 mb-md-3">Welcome</p>
-                  <h2 class="text-16 fw-600 text-white mb-2 mb-md-3"><span class="typed"></span></h2>
-                  <p class="text-5 text-light mb-4">... </p>
-                  <a href="#contact" class="btn btn-outline-primary rounded-pill shadow-none smooth-scroll mt-2">Hire
-                    Me</a>
-                </div>
-              </div>
-            </div>
-            <a href="#about" class="scroll-down-arrow text-white smooth-scroll"><span class="animated"><i
-                  class="fa fa-chevron-down"></i></span></a>
-          </div>
+    <div class="nav-info flex flex-col flex-wrap justify-between gap-8 md:flex-row">
+      <div class="font-light">
+        <p class="tracking-wider text-white/50">E-mail</p>
+        <p class="text-xl tracking-widest lowercase text-pretty">islambadran39@gmail.com</p>
+      </div>
+      <div class="font-light">
+        <p class="tracking-wider text-white/50">Social Media</p>
+        <div class="flex flex-col flex-wrap md:flex-row gap-x-2">
+          <a href="https://github.com/islam302" class="text-sm leading-loose tracking-widest uppercase hover:text-white transition-colors duration-300" target="_blank">{ GitHub }</a>
+          <a href="https://www.linkedin.com/in/islam-badran-39a577225/" class="text-sm leading-loose tracking-widest uppercase hover:text-white transition-colors duration-300" target="_blank">{ LinkedIn }</a>
+          <a href="https://www.facebook.com/islam.badran.77" class="text-sm leading-loose tracking-widest uppercase hover:text-white transition-colors duration-300" target="_blank">{ Facebook }</a>
+          <a href="https://drive.google.com/file/d/1GKZ_JKZ4Geq8PjVt7BcpCETeTo38X7Fb/view?usp=drive_link" class="text-sm leading-loose tracking-widest uppercase hover:text-white transition-colors duration-300" target="_blank">{ CV }</a>
         </div>
-      </section>
-      <!-- Intro end -->
+      </div>
+    </div>
+  </nav>
 
-      <!-- About
-    ============================================= -->
-      <section id="about" class="section bg-dark-1">
-        <div class="container">
-          <!-- Heading -->
-          <div class="position-relative d-flex text-center mb-5">
-            <h2 class="text-24 text-muted opacity-1 text-uppercase fw-600 w-100 mb-0">About Me</h2>
-            <p class="text-9 text-white fw-600 position-absolute w-100 align-self-center lh-base mb-0">Know Me More<span
-                class="heading-separator-line border-bottom border-3 border-primary d-block mx-auto"></span> </p>
-          </div>
-          <!-- Heading end-->
+  <!-- Hamburger Button -->
+  <div class="hamburger fixed z-50 flex flex-col items-center justify-center gap-1.5 transition-all duration-300 bg-black rounded-full cursor-pointer w-14 h-14 md:w-20 md:h-20 top-4 right-10" id="hamburger">
+    <span class="block w-8 h-0.5 bg-white rounded-full origin-center"></span>
+    <span class="block w-8 h-0.5 bg-white rounded-full origin-center"></span>
+  </div>
 
-          <div class="row gy-5">
-            <div class="col-lg-7 col-xl-8 text-center text-lg-start">
+  <!-- Hero Section (Sticky Background) -->
+  <div class="sticky top-0 h-screen w-full z-0">
+    <section class="relative w-full min-h-screen overflow-hidden pt-20 flex flex-col items-center bg-dark-bg">
+      <!-- Animated background pattern -->
+      <div class="absolute inset-0 z-0 pointer-events-none">
+        <div class="absolute inset-0 bg-gradient-to-br from-dark-bg via-slate-900 to-dark-bg" style="animation: techPulse 10s ease-in-out infinite;"></div>
+      </div>
 
+      <!-- Animated SVG Lines -->
+      <div class="absolute inset-0 z-0 pointer-events-none opacity-80">
+        <svg class="absolute h-full w-full" fill="none" viewBox="0 0 696 316" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+          <defs>
+            <linearGradient id="line-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#18CCFC" stop-opacity="0"/>
+              <stop offset="20%" stop-color="#18CCFC" stop-opacity="1"/>
+              <stop offset="50%" stop-color="#6344F5" stop-opacity="1"/>
+              <stop offset="80%" stop-color="#AE48FF" stop-opacity="1"/>
+              <stop offset="100%" stop-color="#AE48FF" stop-opacity="0"/>
+            </linearGradient>
+          </defs>
+          <g opacity="0.03">
+            <path d="M-380 -189C-380 -189 -312 216 152 343C616 470 684 875 684 875" stroke="white" stroke-width="0.5"/>
+            <path d="M-336 -237C-336 -237 -268 168 196 295C660 422 728 827 728 827" stroke="white" stroke-width="0.5"/>
+            <path d="M-292 -285C-292 -285 -224 120 240 247C704 374 772 779 772 779" stroke="white" stroke-width="0.5"/>
+            <path d="M-248 -333C-248 -333 -180 72 284 199C748 326 816 731 816 731" stroke="white" stroke-width="0.5"/>
+            <path d="M-204 -381C-204 -381 -136 24 328 151C792 278 860 683 860 683" stroke="white" stroke-width="0.5"/>
+            <path d="M-160 -429C-160 -429 -92 -24 372 103C836 230 904 635 904 635" stroke="white" stroke-width="0.5"/>
+            <path d="M-116 -477C-116 -477 -48 -72 416 55C880 182 948 587 948 587" stroke="white" stroke-width="0.5"/>
+            <path d="M-72 -525C-72 -525 -4 -120 460 7C924 134 992 539 992 539" stroke="white" stroke-width="0.5"/>
+            <path d="M-28 -573C-28 -573 40 -168 504 -41C968 86 1036 491 1036 491" stroke="white" stroke-width="0.5"/>
+            <path d="M16 -621C16 -621 84 -216 548 -89C1012 38 1080 443 1080 443" stroke="white" stroke-width="0.5"/>
+          </g>
+          <!-- Animated gradient lines -->
+          <path class="animated-line" d="M-380 -189C-380 -189 -312 216 152 343C616 470 684 875 684 875" stroke="url(#line-grad)" stroke-width="1" stroke-linecap="round" pathLength="1"/>
+          <path class="animated-line" d="M-292 -285C-292 -285 -224 120 240 247C704 374 772 779 772 779" stroke="url(#line-grad)" stroke-width="1" stroke-linecap="round" pathLength="1"/>
+          <path class="animated-line" d="M-204 -381C-204 -381 -136 24 328 151C792 278 860 683 860 683" stroke="url(#line-grad)" stroke-width="1" stroke-linecap="round" pathLength="1"/>
+          <path class="animated-line" d="M-116 -477C-116 -477 -48 -72 416 55C880 182 948 587 948 587" stroke="url(#line-grad)" stroke-width="1" stroke-linecap="round" pathLength="1"/>
+          <path class="animated-line" d="M-28 -573C-28 -573 40 -168 504 -41C968 86 1036 491 1036 491" stroke="url(#line-grad)" stroke-width="1" stroke-linecap="round" pathLength="1"/>
+          <path class="animated-line" d="M-336 -237C-336 -237 -268 168 196 295C660 422 728 827 728 827" stroke="url(#line-grad)" stroke-width="1" stroke-linecap="round" pathLength="1"/>
+          <path class="animated-line" d="M-248 -333C-248 -333 -180 72 284 199C748 326 816 731 816 731" stroke="url(#line-grad)" stroke-width="1" stroke-linecap="round" pathLength="1"/>
+          <path class="animated-line" d="M-160 -429C-160 -429 -92 -24 372 103C836 230 904 635 904 635" stroke="url(#line-grad)" stroke-width="1" stroke-linecap="round" pathLength="1"/>
+          <path class="animated-line" d="M-72 -525C-72 -525 -4 -120 460 7C924 134 992 539 992 539" stroke="url(#line-grad)" stroke-width="1" stroke-linecap="round" pathLength="1"/>
+          <path class="animated-line" d="M16 -621C16 -621 84 -216 548 -89C1012 38 1080 443 1080 443" stroke="url(#line-grad)" stroke-width="1" stroke-linecap="round" pathLength="1"/>
+        </svg>
+      </div>
 
+      <!-- Hero Image -->
+      <div class="relative w-full max-w-[950px] h-[550px] md:h-[700px] z-10">
+        <img alt="Islam Badran" class="absolute inset-0 w-full h-full object-cover z-10 transition-transform duration-300 ease-out" src="images/islam.png" style="object-position: center top; transform-origin: center top;" id="heroImage">
+        <!-- Scan overlay -->
+        <div class="absolute inset-0 z-20 pointer-events-none animate-scanner">
+          <div class="w-full h-full bg-gradient-to-b from-transparent via-cyan-400/10 to-transparent"></div>
+        </div>
+      </div>
+    </section>
+  </div>
 
-              <h2 class="text-7 text-white fw-600 mb-3">I'm <span class="text-primary">Islam Badran,</span> a Web
-                Developer</h2>
-              <p class="text-white-50">Hi everyone! My name is Islam Mohamed Badran and I am currently studying
-                Civil Engineering in Alazher University. I am a 21-year-old Django developer with a passion for building
-                high-quality web applications.
+  <!-- Main Content (scrolls over hero) -->
+  <div class="relative z-10 bg-white rounded-t-[40px] shadow-[0_-20px_50px_rgba(0,0,0,0.5)] flex flex-col">
 
-                I am constantly learning and growing my skills in order to become the best developer I can be. I am excited to continue my journey in the tech
-                industry and work on projects that have a positive impact on people's lives.
-
-                If you are looking for a dedicated and hardworking developer, please don't hesitate to reach out to me.
-                I am always open to new opportunities and challenges!.</p>
-            </div>
-            <div class="col-lg-5 col-xl-4">
-              <div class="ps-lg-4">
-                <ul class="list-style-2 list-style-light text-light">
-                  <li><span class="fw-600 me-2">Name:</span>Islam Badran</li>
-                  <li><span class="fw-600 me-2">Email:</span><a
-                      href="https://mail.google.com/mail/?view=cm&fs=1&to=islambadran39@gmail.com"
-                      target="_blank">islambadran39@gmail.com</a></li>
-                  <li><span class="fw-600 me-2">WhatsApp:</span><a href="https://wa.me/201013919821" target="_blank">+201013919821</a>
-                  </li>
-                  <li><span class="fw-600 me-2">Age:</span>21</li>
-
-
-
-                  <li class="border-0"><span class="fw-600 me-2">From:</span>Tanta , Egypt</li>
-                </ul>
-                <a href="https://drive.google.com/file/d/1GKZ_JKZ4Geq8PjVt7BcpCETeTo38X7Fb/view?usp=drive_link"
-                  class="btn btn-primary rounded-pill" target="_blank">Download CV</a>
-              </div>
-            </div>
-          </div>
-          <div class="brands-grid separator-border separator-border-light mt-5">
-            <div class="row">
-              <div class="col-6 col-md-3">
-                <div class="featured-box text-center">
-                  <h4 class="text-12 text-white-50 mb-0"><span class="counter" data-from="0" data-to="2">2</span>+</h4>
-                  <p class="text-light mb-0">Years Experiance</p>
-                </div>
-              </div>
-              <div class="col-6 col-md-3">
-                <div class="featured-box text-center">
-                  <h4 class="text-12 text-white-50 mb-0"><span class="counter" data-from="0" data-to="20">20</span>+
-                  </h4>
-                  <p class="text-light mb-0">Happy Clients</p>
-                </div>
-              </div>
-              <div class="col-6 col-md-3">
-                <div class="featured-box text-center">
-                  <h4 class="text-12 text-white-50 mb-0"><span class="counter" data-from="0" data-to="30">30</span>+
-                  </h4>
-                  <p class="text-light mb-0">Projects Done</p>
-                </div>
-              </div>
-              <!-- <div class="col-6 col-md-3">
-              <div class="featured-box text-center"> -->
-              <!-- <h4 class="text-12 text-white-50 mb-0"><span class="counter" data-from="0" data-to="38">20</span></h4> -->
-              <!-- <p class="text-light mb-0">Get Awards</p> -->
-              <!-- </div>
-            </div> -->
+    <!-- Home Section -->
+    <section id="home" class="min-h-screen flex flex-col items-center justify-center">
+      <div class="w-full mt-4 flex flex-col items-center z-30">
+        <div class="clip-reveal">
+          <div class="flex flex-col justify-center gap-12 pt-16 sm:gap-16 reveal-up">
+            <p class="text-sm font-light tracking-[0.4rem] uppercase px-10 text-black">Where logic meets imagination, creation starts.</p>
+            <div class="px-10">
+              <h1 class="flex flex-col gap-6 uppercase banner-text-responsive sm:gap-10 md:block text-black">
+                <span>Islam </span>
+                <span>Badran </span>
+              </h1>
             </div>
           </div>
         </div>
-      </section>
-      <!-- About end -->
-
-      <!-- Resume
-    ============================================= -->
-      <section id="resume" class="section bg-dark-2">
-        <div class="container">
-          <!-- Heading -->
-          <div class="position-relative d-flex text-center mb-5">
-            <h2 class="text-24 text-muted opacity-1 text-uppercase fw-600 w-100 mb-0">Summary</h2>
-            <p class="text-9 text-white fw-600 position-absolute w-100 align-self-center lh-base mb-0">Resume<span
-                class="heading-separator-line border-bottom border-3 border-primary d-block mx-auto"></span> </p>
-          </div>
-          <!-- Heading end-->
-
-          <div class="row gx-5">
-            <!-- My Education -->
-            <div class="col-md-6">
-              <h2 class="text-6 text-white fw-600 mb-4">My Education</h2>
-              <div class="bg-dark rounded p-4 mb-4">
-                <p class="badge bg-danger text-2 fw-400">2021 - 2027</p>
-                <h3 class="text-5 text-white">Bachelor Degree</h3>
-                <h3 class="text-5 text-white">Faculty Of Engineering</h3>
-                <p class="text-primary">Alazhar University</p>
-                <!-- <p class="text-white-50 mb-0">Lisque persius interesset his et, in quot quidam persequeris vim, ad mea essent possim iriure.</p> -->
-              </div>
-              <!-- <div class="bg-dark rounded p-4 mb-4">
-              <p class="badge bg-danger text-2 fw-400">2009 - 2012</p>
-              <h3 class="text-5 text-white">Master Degree</h3>
-              <p class="text-primary">Harvard University</p>
-              <p class="text-white-50 mb-0">Lisque persius interesset his et, in quot quidam persequeris vim, ad mea essent possim iriure.</p>
-            </div> -->
-            </div>
-
-          <!-- My Experience -->
-          <div class="col-md-6">
-              <h2 class="text-6 text-white fw-600 mb-4">My Experience</h2>
-
-              <!-- Django Backend Developer at Eduneer.net -->
-              <div class="bg-dark rounded p-4 mb-4">
-                  <p class="badge bg-danger text-2 fw-400">6months</p>
-                  <h3 class="text-5 text-white">Django Backend Developer</h3>
-                  <p class="text-primary">at Eduneer.net</p>
-                  <p class="text-white-50 mb-0">Currently developing a ChatBot for site client services using Django and AI models like Fuzz and SpaCy.</p>
-                  <p class="text-white-50 mb-0">Worked on systems involving data analysis supported by AI tools.</p>
-              </div>
-
-              <!-- Python Developer at UNA-OIC.ORG -->
-              <div class="bg-dark rounded p-4 mb-4">
-                  <p class="badge bg-danger text-2 fw-400">03/2024 – currently</p>
-                  <h3 class="text-5 text-white">Python Developer</h3>
-                  <p class="text-primary">at UNA-OIC.ORG</p>
-                  <p class="text-white-50 mb-0">Worked on various tasks related to data analysis supported by AI tools.</p>
-              </div>
-
-              <!-- Freelancer -->
-              <div class="bg-dark rounded p-4 mb-4">
-                  <p class="badge bg-danger text-2 fw-400">2022 – currently</p>
-                  <p class="badge bg-danger text-2 fw-400">Freelancer</p>
-                  <h3 class="text-5 text-white">Python Developer & Backend Developer</h3>
-                  <p class="text-primary">Freelancer</p>
-                  <p class="text-white-50 mb-0">Developed scraping scripts using libraries like Selenium for websites such as Facebook and TikTok.</p>
-                  <p class="text-white-50 mb-0">Created data entry and extraction scripts.</p>
-              </div>
-          </div>
-
-              <br>
-
-            </div>
-
-            <!-- My Skills -->
-
-            <h2 class="text-6 text-white fw-600 mt-4 mb-4">My Skills</h2>
-
-            <div class="row gx-5">
-
-              <div class="col-md-6">
-                <p class="text-light fw-500 text-start mb-2">Python <span class="float-end">80%</span></p>
-                <div class="progress progress-sm bg-dark mb-4">
-                  <div class="progress-bar" role="progressbar" style="width: 80%" aria-valuenow="80" aria-valuemin="0"
-                    aria-valuemax="100"></div>
-                </div>
-                <p class="text-light fw-500 text-start mb-2">Django <span class="float-end">80%</span></p>
-                <div class="progress progress-sm bg-dark mb-4">
-                  <div class="progress-bar" role="progressbar" style="width: 80%" aria-valuenow="80" aria-valuemin="0"
-                    aria-valuemax="100"></div>
-                </div>
-
-                <p class="text-light fw-500 text-start mb-2">Rest Framework <span class="float-end">80%</span></p>
-                <div class="progress progress-sm bg-dark mb-4">
-                  <div class="progress-bar" role="progressbar" style="width: 80%" aria-valuenow="90" aria-valuemin="0"
-                    aria-valuemax="100"></div>
-                </div>
-
-                <p class="text-light fw-500 text-start mb-2">Docker <span class="float-end">70%</span></p>
-                <div class="progress progress-sm bg-dark mb-4">
-                  <div class="progress-bar" role="progressbar" style="width: 70%" aria-valuenow="90" aria-valuemin="0"
-                    aria-valuemax="100"></div>
-                </div>
-
-                <p class="text-light fw-500 text-start mb-2">Git <span class="float-end">90%</span></p>
-                <div class="progress progress-sm bg-dark mb-4">
-                  <div class="progress-bar" role="progressbar" style="width: 90%" aria-valuenow="90" aria-valuemin="0"
-                    aria-valuemax="100"></div>
-                </div>
-
-              </div>
-              <div class="col-md-6">
-
-                <p class="text-light fw-500 text-start mb-2">GitHub <span class="float-end">85%</span></p>
-                <div class="progress progress-sm bg-dark mb-4">
-                  <div class="progress-bar" role="progressbar" style="width: 85%" aria-valuenow="90" aria-valuemin="0"
-                    aria-valuemax="100"></div>
-                </div>
-
-                <p class="text-light fw-500 text-start mb-2">SQL <span class="float-end">80%</span></p>
-                <div class="progress progress-sm bg-dark mb-4">
-                  <div class="progress-bar" role="progressbar" style="width: 80%" aria-valuenow="70" aria-valuemin="0"
-                    aria-valuemax="100"></div>
-                </div>
-
-                <p class="text-light fw-500 text-start mb-2">PostgreSQL <span class="float-end">70%</span></p>
-                <div class="progress progress-sm bg-dark mb-4">
-                  <div class="progress-bar" role="progressbar" style="width: 70%" aria-valuenow="70" aria-valuemin="0"
-                    aria-valuemax="100"></div>
-                </div>
-
-                <p class="text-light fw-500 text-start mb-2">HTML / CSS <span class="float-end">50%</span></p>
-                <div class="progress progress-sm bg-dark mb-4">
-                  <div class="progress-bar" role="progressbar" style="width: 50%" aria-valuenow="50" aria-valuemin="0"
-                    aria-valuemax="100"></div>
-                </div>
-                </div>
-              </div>
-            </div>
-      </section>
-      <!-- Resume end -->
-
-      <!-- Portfolio
-    ============================================= -->
-      <section id="portfolio" class="section bg-dark-1">
-        <div class="container">
-          <!-- Heading -->
-          <div class="position-relative d-flex text-center mb-5">
-            <h2 class="text-24 text-white-50 opacity-1 text-uppercase fw-600 w-100 mb-0">Portfolio</h2>
-            <p class="text-9 text-white fw-600 position-absolute w-100 align-self-center lh-base mb-0">My Projects<span
-                class="heading-separator-line border-bottom border-3 border-primary d-block mx-auto"></span> </p>
-          </div>
-          <!-- Heading end-->
-
-          <!-- Filter Menu -->
-          <ul class="portfolio-menu nav nav-tabs nav-light justify-content-center border-bottom-0 mb-5">
-            <li class="nav-item"> <a data-filter="*" class="nav-link active" href="">All</a></li>
-            <li class="nav-item"> <a data-filter=".Web" href="" class="nav-link">Web Apps</a></li>
-            <li class="nav-item"> <a data-filter=".Automation" href="" class="nav-link">Automation-Web_Scraping-Data_Analyst</a></li>
-            <!-- <li class="nav-item"> <a data-filter=".photos" href="" class="nav-link">Photos</a></li> -->
-          </ul>
-          <!-- Filter Menu end -->
-          <div>
-
-            <div class="row portfolio-filter g-4">
-
-              <div class="col-sm-6 col-lg-4 Web">
-                <div class="portfolio-box rounded">
-                  <div class="portfolio-img rounded"> <img class="img-fluid d-block" src="images/projects/omnifood.png"
-                      alt="Omnifood">
-                    <div class="portfolio-overlay"> <a class="popup-ajax stretched-link"
-                        href="https://omnifood-sable-xi.vercel.app/" target="_blank"></a>
-                      <div class="portfolio-overlay-details">
-                        <h5 class="text-white fw-400">OmniFood</h5>
-                        <span class="text-light">React | Html | Css | JS | Bootstrap </span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div class="col-sm-6 col-lg-4 Web">
-                <div class="portfolio-box rounded">
-                  <div class="portfolio-img rounded"> <img class="img-fluid d-block" src="images/projects/emails.png"
-                      alt="GoToMail">
-                    <div class="portfolio-overlay"> <a class="popup-ajax stretched-link"
-                        href="https://email-sender-com.vercel.app/" target="_blank"></a>
-                      <div class="portfolio-overlay-details">
-                        <h5 class="text-white fw-400">GoToMail</h5>
-                        <span class="text-light">Python|Django|Brevo|React | Html | Css | JS | Bootstrap </span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-
-              <div class="col-sm-6 col-lg-4 Web">
-                <div class="portfolio-box rounded">
-                  <div class="portfolio-img rounded"> <img class="img-fluid d-block" src="images/projects/data.png"
-                      alt="DataHandler">
-                    <div class="portfolio-overlay"> <a class="popup-ajax stretched-link"
-                        href="https://data-handler2.vercel.app/" target="_blank"></a>
-                      <div class="portfolio-overlay-details">
-                        <h5 class="text-white fw-400">DataHandler</h5>
-                        <span class="text-light">Python|Django|Brevo|React | Html | Css | JS | Bootstrap </span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-
-              <div class="col-sm-6 col-lg-4 Web">
-                <div class="portfolio-box rounded">
-                  <div class="portfolio-img rounded"> <img class="img-fluid d-block" src="images/projects/alyan.png"
-                      alt="Aliyn">
-                    <div class="portfolio-overlay"> <a class="popup-ajax stretched-link"
-                        href="https://aliyn-portfolio.vercel.app/" target="_blank"></a>
-                      <div class="portfolio-overlay-details">
-                        <h5 class="text-white fw-400">Aliyn</h5>
-                        <span class="text-light">React | Html | Css | JS | Bootstrap </span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div class="col-sm-6 col-lg-4 Web">
-                <div class="portfolio-box rounded">
-                  <div class="portfolio-img rounded"> <img class="img-fluid d-block" src="images/projects/soicalmagic.png"
-                      alt="soicalmagic">
-                    <div class="portfolio-overlay">
-                      <a class="popup-ajax stretched-link" href="https://soicalmagic.com/" target="_blank"></a>
-                      <div class="portfolio-overlay-details">
-                        <h5 class="text-white fw-400">SoicalMagic</h5>
-                        <span class="text-light">React | Html | Css | JS | Bootstrap </span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div class="col-sm-6 col-lg-4 Web">
-                <div class="portfolio-box rounded">
-                  <div class="portfolio-img rounded"> <img class="img-fluid d-block" src="images/projects/graph.png"
-                      alt="Graphic Designer Site">
-                    <div class="portfolio-overlay"> <a class="popup-ajax stretched-link"
-                        href="https://mahmoudfawzy.net/" target="_blank"></a>
-                      <div class="portfolio-overlay-details">
-                        <h5 class="text-white fw-400">Graphic Designer Site</h5>
-                        <span class="text-light">React | Html | Css | JS | Bootstrap </span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div class="col-sm-6 col-lg-4 Web">
-                <div class="portfolio-box rounded">
-                  <div class="portfolio-img rounded"> <img class="img-fluid d-block" src="images/projects/ecommerce.png"
-                      alt="E-commerce">
-                    <div class="portfolio-overlay"> <a class="popup-ajax stretched-link"
-                        href="https://t-empire.netlify.app/" target="_blank"></a>
-                      <div class="portfolio-overlay-details">
-                        <h5 class="text-white fw-400">E-commerce</h5>
-                        <span class="text-light">Python | Django | DRF</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div class="col-sm-6 col-lg-4 Web">
-                <div class="portfolio-box rounded">
-                  <div class="portfolio-img rounded"> <img class="img-fluid d-block"
-                      src="images/projects/chatbot.png" alt="">
-                    <div class="portfolio-overlay"> <a class="popup-ajax stretched-link"
-                        href="https://una-chatbot.onrender.com/"></a>
-                      <div class="portfolio-overlay-details">
-                        <h5 class="text-white fw-400">Ai Chat Bot</h5>
-                        <span class="text-light">Python | Django | OpenAi</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div class="col-sm-6 col-lg-4 artwork Web">
-                <div class="portfolio-box rounded">
-                  <div class="portfolio-img rounded"> <img class="img-fluid d-block" src="images/projects/airtravel.jpeg"
-                      alt="">
-                    <div class="portfolio-overlay"> <a class="popup-ajax stretched-link"
-                        href="https://github.com/islam302/AirTravel-Booking-System"></a>
-                      <div class="portfolio-overlay-details">
-                        <h5 class="text-white fw-400">AirTravel-Booking-System</h5>
-                        <span class="text-light">Python | Django</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div class="col-sm-6 col-lg-4 Automation">
-                <div class="portfolio-box rounded">
-                  <div class="portfolio-img rounded"> <img class="img-fluid d-block" src="images/projects/emailsender.png"
-                      alt="E-commerce">
-                    <div class="portfolio-overlay"> <a class="popup-ajax stretched-link"
-                        href="https://github.com/islam302/SMTP_EMAILS_SENDER"></a>
-                      <div class="portfolio-overlay-details">
-                        <h5 class="text-white fw-400">SMTP EMAILS SENDER</h5>
-                        <span class="text-light">Python | smtplib | pandas | tkinter</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div class="col-sm-6 col-lg-4 Automation">
-                <div class="portfolio-box rounded">
-                  <div class="portfolio-img rounded"> <img class="img-fluid d-block" src="images/projects/google.png"
-                      alt="E-commerce">
-                    <div class="portfolio-overlay"> <a class="popup-ajax stretched-link"
-                        href="https://github.com/islam302/Google-Yahoo-DuckDuckGo_SearchResults_Exractor"></a>
-                      <div class="portfolio-overlay-details">
-                        <h5 class="text-white fw-400">Get Google Search Results</h5>
-                        <span class="text-light">Python | requests| bs4 | pandas | tkinter</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div class="col-sm-6 col-lg-4 Automation">
-                <div class="portfolio-box rounded">
-                  <div class="portfolio-img rounded"> <img class="img-fluid d-block" src="images/projects/facebook.png"
-                      alt="E-commerce">
-                    <div class="portfolio-overlay"> <a class="popup-ajax stretched-link"
-                        href="https://github.com/islam302/"></a>
-                      <div class="portfolio-overlay-details">
-                        <h5 class="text-white fw-400">Get facebook users data</h5>
-                        <span class="text-light">Python | requests| bs4 | pandas | pyqt5</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div class="col-sm-6 col-lg-4 Automation">
-                <div class="portfolio-box rounded">
-                  <div class="portfolio-img rounded"> <img class="img-fluid d-block" src="images/projects/createfiles.png"
-                      alt="E-commerce">
-                    <div class="portfolio-overlay"> <a class="popup-ajax stretched-link"
-                        href="https://github.com/islam302/Excel-Data-Extractor"></a>
-                      <div class="portfolio-overlay-details">
-                        <h5 class="text-white fw-400">Excel-Data-Extractor</h5>
-                        <span class="text-light">Python | openpyxl| pandas | tkinter</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-            </div>
-          </div>
-        </div>
-      </section>
-      <!-- Portfolio end  -->
-
-      <!-- Testimonial
-    =============================================  -->
-      <section id="testimonial" class="section bg-dark-2">
-        <div class="container">
-          <!-- Heading -->
-          <div class="position-relative d-flex text-center mb-5">
-            <h2 class="text-24 text-muted opacity-1 text-uppercase fw-600 w-100 mb-0">Testimonial</h2>
-            <p class="text-9 text-white fw-600 position-absolute w-100 align-self-center lh-base mb-0">Client Speak<span
-                class="heading-separator-line border-bottom border-3 border-primary d-block mx-auto"></span> </p>
-          </div>
-          <!-- Heading end-->
-
-          <div class="owl-carousel owl-light owl-theme" data-loop="true" data-nav="false" data-autoplay="false"
-            data-margin="25" data-stagepadding="0" data-slideby="1" data-items-xs="1" data-items-sm="1"
-            data-items-md="1" data-items-lg="2">
-            <div class="item">
-              <div class="bg-dark rounded p-5">
-                <div class="d-flex align-items-center mt-auto mb-4"> <img
-                    class="img-fluid rounded-circle d-inline-block w-auto" src="images/testimonial/cliet-sm-3.jpg"
-                    alt="">
-                  <p class="ms-3 mb-0"><strong class="d-block text-white fw-600"></strong> <span
-                      class="text-white-50 fw-500">Atif Alabbasi</span></p>
-                </div>
-                <p class="text-light mb-4">“شخص مميز راقي ومتعاون أسال الله لك التوفيق والنجاح
-جودة الخدمة
-التواصل والمتابعة
-التسليم بالموعد”</p>
-                <span class="text-2"> <i class="fas fa-star text-warning"></i> <i class="fas fa-star text-warning"></i>
-                  <i class="fas fa-star text-warning"></i> <i class="fas fa-star text-warning"></i> <i
-                    class="fas fa-star text-warning"></i> </span>
-              </div>
-            </div>
-            <div class="item">
-              <div class="bg-dark rounded p-5">
-                <div class="d-flex align-items-center mt-auto mb-4"> <img
-                    class="img-fluid rounded-circle d-inline-block w-auto" src="images/testimonial/clent-sm-1.jpg"
-                    alt="">
-                  <p class="ms-3 mb-0"><strong class="d-block text-white fw-600">Ahmed Khaled</strong> <span
-                      class="text-white-50 fw-500">User from Egypt</span></p>
-                </div>
-                <p class="text-light mb-4">”شكرا جدا لحضرتك يابشمهندس اسلام شغل محترم جدا والشغل اتسلم زي ما انا محتاج بالظبط في الوقت المناسب وإنشاء الله مش اخر تعامل بينا بإذن الله وهرشح حضرتك لاي حد يحتاج شغل automation”</p>
-                <span class="text-2"> <i class="fas fa-star text-warning"></i> <i class="fas fa-star text-warning"></i>
-                  <i class="fas fa-star text-warning"></i> <i class="fas fa-star text-warning"></i> <i
-                    class="fas fa-star text-warning"></i> </span>
-              </div>
-            </div>
-            <div class="item">
-              <div class="bg-dark rounded p-5">
-                <div class="d-flex align-items-center mt-auto mb-4"> <img
-                    class="img-fluid rounded-circle d-inline-block w-auto" src="images/testimonial/clent-sm-2.jpg"
-                    alt="">
-                  <p class="ms-3 mb-0"><strong class="d-block text-white fw-600">Aymen Ahmed</strong> <span
-                      class="text-white-50 fw-500">Freelancer from Egypt</span></p>
-                </div>
-                <p class="text-light mb-4">“جودة الخدمة
-التواصل والمتابعة
-التسليم بالموعد”</p>
-                <span class="text-2"> <i class="fas fa-star text-warning"></i> <i class="fas fa-star text-warning"></i>
-                  <i class="fas fa-star text-warning"></i> <i class="fas fa-star text-warning"></i> <i
-                    class="fas fa-star text-warning"></i> </span>
-              </div>
-            </div>
-            <div class="item">
-              <div class="bg-dark rounded p-5">
-                <div class="d-flex align-items-center mt-auto mb-4">
-                  <img class="img-fluid rounded-circle d-inline-block w-auto" src="images/testimonial/cliet-sm-3.jpg" alt="">
-                  <p class="ms-3 mb-0"><strong class="d-block text-white fw-600"></strong>
-                    <span class="text-white-50 fw-500">Atif Alabbasi</span>
-                  </p>
-                </div>
-                <p class="text-light mb-4">
-                  <img src="images/comment.jpg" alt="Comment Image" class="img-fluid">
-                </p>
-                <span class="text-2">
-                  <i class="fas fa-star text-warning"></i>
-                  <i class="fas fa-star text-warning"></i>
-                  <i class="fas fa-star text-warning"></i>
-                  <i class="fas fa-star text-warning"></i>
-                  <i class="fas fa-star text-warning"></i>
-                </span>
-              </div>
-            </div>
-
-          </div>
-        </div>
-      </section>
-      <!-- Testimonial end -->
-      <!-- Content start -->
-      <div id="content" class="section footer-dark bg-dark-1">
-        <div class="container">
-          <div class="row">
-            <div class="col-md-6 text-center text-md-start mb-4 mb-md-0">
-              <h2 class="text-5 text-white text-uppercase mb-3">Contact Information</h2>
-              <address class="text-light">
-                <i class="fas fa-map-marker-alt me-2"></i>Tanta, Egypt
-              </address>
-              <p class="text-3 text-light mb-3-custom">
-                <span class="text-primary text-4 me-2">
-                  <i class="fab fa-whatsapp"></i>
-                </span>
-                <a href="https://wa.me/201013919821" target="_blank" rel="noopener noreferrer" class="text-light">
-                  +201013919821</a>
-              </p>
-              <p class="text-3 text-light mb-3-custom">
-                <span class="text-primary text-4 me-2">
-                  <i class="fas fa-envelope"></i>
-                </span>
-                <a href="https://mail.google.com/mail/?view=cm&fs=1&to=islambadran39@gmail.com"
-                  class="text-light">islambadran39@gmail.com</a>
-              </p>
+        <div class="relative px-10 text-black w-full">
+          <div class="absolute inset-x-0 border-t-2 border-black/20"></div>
+          <div class="pt-12 sm:pt-16 text-start">
+            <div class="font-light uppercase value-text-responsive text-black reveal-up">
+              <span class="block leading-relaxed tracking-wide text-pretty">Transforming complex ideas into robust, scalable backend solutions using Python, Django, and REST APIs.</span>
             </div>
           </div>
         </div>
       </div>
-      <!-- Content end -->
+    </section>
 
-      <!-- Footer -->
-      <footer id="footer" class="section footer-dark bg-dark-2">
-        <div class="container">
-          <div class="row">
-            <div class="col-md-6 text-center text-md-end">
-              <p class="mb-3 mb-md-0">Copyright © 2024 <a href="#" class="fw-500 text-light">Islam Badran</a>. All
-                Rights Reserved.</p>
+    <!-- Scrolling Text Banner -->
+    <section class="mt-20 overflow-hidden font-light leading-snug text-center mb-20 contact-text-responsive">
+      <div class="scroll-text-1">
+        <p>Backend</p>
+      </div>
+      <div class="flex items-center justify-center gap-3 scroll-text-2">
+        <p class="font-normal">Development</p>
+        <div class="w-10 h-1 md:w-32 bg-gold"></div>
+        <p>Automation</p>
+      </div>
+      <div class="flex items-center justify-center gap-3 scroll-text-3">
+        <p>APIs</p>
+        <div class="w-10 h-1 md:w-32 bg-gold"></div>
+        <p class="italic">Scalability</p>
+        <div class="w-10 h-1 md:w-32 bg-gold"></div>
+        <p>Performance</p>
+      </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="min-h-screen bg-black rounded-t-[2.5rem]">
+      <!-- Section Header -->
+      <div class="clip-reveal">
+        <div class="flex flex-col justify-center gap-12 pt-16 sm:gap-16 reveal-up">
+          <p class="text-sm font-light tracking-[0.4rem] uppercase px-10 text-white">CRAFTING WITH &lt;CODE /&gt; AND CREATIVITY</p>
+          <div class="px-10">
+            <h1 class="flex flex-col gap-12 uppercase banner-text-responsive sm:gap-16 md:block text-white">
+              <span>Services </span>
+            </h1>
+          </div>
+        </div>
+      </div>
+      <div class="relative px-10 text-white">
+        <div class="absolute inset-x-0 border-t-2 border-white/20"></div>
+        <div class="pt-12 sm:pt-16 text-start">
+          <div class="font-light uppercase value-text-responsive text-white reveal-up">
+            <span class="block leading-relaxed tracking-wide text-pretty">I BUILD SCALABLE,</span>
+            <span class="block leading-relaxed tracking-wide text-pretty">HIGH-PERFORMANCE BACKEND SYSTEMS WITH</span>
+            <span class="block leading-relaxed tracking-wide text-pretty">CLEAN ARCHITECTURE AND ROBUST APIs.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sticky Service Cards -->
+      <div class="sticky px-10 pt-6 pb-12 text-white bg-black border-t-2 border-white/30 service-card" style="top: calc(0em + 10vh); margin-bottom: 15rem;">
+        <div class="flex items-center justify-between gap-4 font-light">
+          <div class="flex flex-col gap-6">
+            <h2 class="text-4xl lg:text-5xl">Backend Development</h2>
+            <p class="text-xl leading-relaxed tracking-widest lg:text-2xl text-white/60 text-pretty">Building production-ready web applications using Django and Django REST Framework. Specializing in clean architecture, efficient database design, and secure authentication systems.</p>
+            <div class="flex flex-col gap-2 text-2xl sm:gap-4 lg:text-3xl text-white/80">
+              <div>
+                <h3 class="flex"><span class="mr-12 text-lg text-white/30">01</span>Django & Django REST Framework</h3>
+                <div class="w-full h-px my-2 bg-white/30"></div>
+              </div>
+              <div>
+                <h3 class="flex"><span class="mr-12 text-lg text-white/30">02</span>Database Design & PostgreSQL</h3>
+                <div class="w-full h-px my-2 bg-white/30"></div>
+              </div>
+              <div>
+                <h3 class="flex"><span class="mr-12 text-lg text-white/30">03</span>Authentication & Security</h3>
+              </div>
             </div>
-            <div class="col-md-6 text-center text-md-end">
-              <!-- Back to Top -->
-              <a id="back-to-top" class="rounded-circle" data-bs-toggle="tooltip" title="Back to Top"
-                href="javascript:void(0)">
-                <i class="fa fa-chevron-up"></i>
+          </div>
+        </div>
+      </div>
+
+      <div class="sticky px-10 pt-6 pb-12 text-white bg-black border-t-2 border-white/30 service-card" style="top: calc(5em + 10vh); margin-bottom: 10rem;">
+        <div class="flex items-center justify-between gap-4 font-light">
+          <div class="flex flex-col gap-6">
+            <h2 class="text-4xl lg:text-5xl">Automation & Web Scraping</h2>
+            <p class="text-xl leading-relaxed tracking-widest lg:text-2xl text-white/60 text-pretty">Creating powerful automation scripts and web scraping tools using Selenium, BeautifulSoup, and Python. Extracting and processing data from complex web sources efficiently.</p>
+            <div class="flex flex-col gap-2 text-2xl sm:gap-4 lg:text-3xl text-white/80">
+              <div>
+                <h3 class="flex"><span class="mr-12 text-lg text-white/30">01</span>Selenium Browser Automation</h3>
+                <div class="w-full h-px my-2 bg-white/30"></div>
+              </div>
+              <div>
+                <h3 class="flex"><span class="mr-12 text-lg text-white/30">02</span>BeautifulSoup & Requests</h3>
+                <div class="w-full h-px my-2 bg-white/30"></div>
+              </div>
+              <div>
+                <h3 class="flex"><span class="mr-12 text-lg text-white/30">03</span>Data Extraction & Processing</h3>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sticky px-10 pt-6 pb-12 text-white bg-black border-t-2 border-white/30 service-card" style="top: calc(10em + 10vh); margin-bottom: 5rem;">
+        <div class="flex items-center justify-between gap-4 font-light">
+          <div class="flex flex-col gap-6">
+            <h2 class="text-4xl lg:text-5xl">API Development & Integration</h2>
+            <p class="text-xl leading-relaxed tracking-widest lg:text-2xl text-white/60 text-pretty">Designing and building RESTful APIs with comprehensive documentation. Integrating third-party services and AI tools for intelligent data processing and analysis.</p>
+            <div class="flex flex-col gap-2 text-2xl sm:gap-4 lg:text-3xl text-white/80">
+              <div>
+                <h3 class="flex"><span class="mr-12 text-lg text-white/30">01</span>RESTful API Architecture</h3>
+                <div class="w-full h-px my-2 bg-white/30"></div>
+              </div>
+              <div>
+                <h3 class="flex"><span class="mr-12 text-lg text-white/30">02</span>AI & ChatBot Integration</h3>
+                <div class="w-full h-px my-2 bg-white/30"></div>
+              </div>
+              <div>
+                <h3 class="flex"><span class="mr-12 text-lg text-white/30">03</span>Docker & Deployment</h3>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sticky px-10 pt-6 pb-12 text-white bg-black border-t-2 border-white/30 service-card" style="top: calc(15em + 10vh); margin-bottom: 0rem;">
+        <div class="flex items-center justify-between gap-4 font-light">
+          <div class="flex flex-col gap-6">
+            <h2 class="text-4xl lg:text-5xl">Data Analysis & AI Tools</h2>
+            <p class="text-xl leading-relaxed tracking-widest lg:text-2xl text-white/60 text-pretty">Leveraging Python's powerful data ecosystem for analysis and visualization. Building AI-powered solutions using NLP libraries like SpaCy and FuzzyWuzzy for intelligent applications.</p>
+            <div class="flex flex-col gap-2 text-2xl sm:gap-4 lg:text-3xl text-white/80">
+              <div>
+                <h3 class="flex"><span class="mr-12 text-lg text-white/30">01</span>Pandas & Data Processing</h3>
+                <div class="w-full h-px my-2 bg-white/30"></div>
+              </div>
+              <div>
+                <h3 class="flex"><span class="mr-12 text-lg text-white/30">02</span>SpaCy & NLP Solutions</h3>
+                <div class="w-full h-px my-2 bg-white/30"></div>
+              </div>
+              <div>
+                <h3 class="flex"><span class="mr-12 text-lg text-white/30">03</span>OpenAI API Integration</h3>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="min-h-screen bg-black rounded-b-[2.5rem]">
+      <div class="clip-reveal">
+        <div class="flex flex-col justify-center gap-12 pt-16 sm:gap-16 reveal-up">
+          <p class="text-sm font-light tracking-[0.4rem] uppercase px-10 text-white">Code with purpose, Built to scale</p>
+          <div class="px-10">
+            <h1 class="flex flex-col gap-12 uppercase banner-text-responsive sm:gap-16 md:block text-white">
+              <span>About </span>
+            </h1>
+          </div>
+        </div>
+      </div>
+      <div class="relative px-10 text-white">
+        <div class="absolute inset-x-0 border-t-2 border-white/20"></div>
+        <div class="pt-12 sm:pt-16 text-start">
+          <div class="font-light uppercase value-text-responsive text-white reveal-up">
+            <span class="block leading-relaxed tracking-wide text-pretty">Passionate about clean architecture</span>
+            <span class="block leading-relaxed tracking-wide text-pretty">&nbsp;&nbsp;&nbsp;&nbsp;I build scalable, high-performance solutions</span>
+            <span class="block leading-relaxed tracking-wide text-pretty">&nbsp;&nbsp;&nbsp;&nbsp;from prototype to production</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex flex-col items-center justify-between gap-16 px-10 pb-16 text-xl font-light tracking-wide lg:flex-row md:text-2xl lg:text-3xl text-white/60 mt-16">
+        <img alt="Islam Badran" class="w-full max-w-md rounded-3xl reveal-up" src="images/islam.png" style="object-fit: cover; max-height: 500px;">
+        <div class="w-full">
+          <span class="block leading-relaxed tracking-wide text-pretty reveal-up mb-6">I am Islam Badran, a passionate Python Developer and Backend Engineer currently studying Civil Engineering at Al-Azhar University.</span>
+          <span class="block leading-relaxed tracking-wide text-pretty reveal-up mb-6">With 2+ years of experience, I specialize in building high-quality web applications using Django, REST Framework, and modern Python tools. I have a strong focus on automation, web scraping, and AI-powered solutions.</span>
+          <span class="block leading-relaxed tracking-wide text-pretty reveal-up">I am constantly learning and growing my skills to deliver robust, scalable applications. With 30+ projects completed and 20+ happy clients, I am always open to new opportunities and challenges.</span>
+        </div>
+      </div>
+
+      <!-- Stats -->
+      <div class="grid grid-cols-3 gap-8 px-10 pb-20 text-center text-white">
+        <div class="reveal-up">
+          <p class="text-5xl md:text-7xl font-bold text-white/50">2+</p>
+          <p class="text-sm md:text-base tracking-widest uppercase text-white/40 mt-2">Years Experience</p>
+        </div>
+        <div class="reveal-up">
+          <p class="text-5xl md:text-7xl font-bold text-white/50">20+</p>
+          <p class="text-sm md:text-base tracking-widest uppercase text-white/40 mt-2">Happy Clients</p>
+        </div>
+        <div class="reveal-up">
+          <p class="text-5xl md:text-7xl font-bold text-white/50">30+</p>
+          <p class="text-sm md:text-base tracking-widest uppercase text-white/40 mt-2">Projects Done</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects" class="flex flex-col min-h-screen">
+      <div class="clip-reveal">
+        <div class="flex flex-col justify-center gap-12 pt-16 sm:gap-16 reveal-up">
+          <p class="text-sm font-light tracking-[0.4rem] uppercase px-10 text-black">Logic meets Functionality, Seamlessly</p>
+          <div class="px-10">
+            <h1 class="flex flex-col gap-12 uppercase banner-text-responsive sm:gap-16 md:block text-black">
+              <span>Projects </span>
+            </h1>
+          </div>
+        </div>
+      </div>
+      <div class="relative px-10 text-black">
+        <div class="absolute inset-x-0 border-t-2 border-black/20"></div>
+        <div class="pt-12 sm:pt-16 text-start">
+          <div class="font-light uppercase value-text-responsive text-black reveal-up">
+            <span class="block leading-relaxed tracking-wide text-pretty">Featured projects that have been meticulously</span>
+            <span class="block leading-relaxed tracking-wide text-pretty">&nbsp;&nbsp;&nbsp;&nbsp;crafted with passion to drive</span>
+            <span class="block leading-relaxed tracking-wide text-pretty">&nbsp;&nbsp;&nbsp;&nbsp;results and impact.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Project List -->
+      <div class="relative flex flex-col font-light mt-8">
+        <!-- Project 1 -->
+        <a class="project-item relative flex flex-col gap-1 py-5 cursor-pointer group md:gap-0 reveal-up" href="https://una-chatbot.onrender.com/" target="_blank">
+          <div class="project-bg absolute inset-0 hidden md:block bg-black -z-10"></div>
+          <div class="project-content flex justify-between px-10 project-text text-black transition-all duration-500">
+            <h2 class="lg:text-[32px] text-[26px] leading-none">AI Chat Bot</h2>
+            <svg xmlns="http://www.w3.org/2000/svg" class="md:size-6 size-5" width="1em" height="1em" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h10v10M7 17L17 7"/></svg>
+          </div>
+          <div class="w-full h-0.5 bg-black/80 mx-10" style="width: calc(100% - 5rem);"></div>
+          <div class="flex px-10 text-xs leading-loose uppercase gap-x-5 md:text-sm project-text text-black transition-colors duration-500">
+            <p>Python</p><p>Django</p><p>OpenAI</p><p>NLP</p>
+          </div>
+        </a>
+
+        <!-- Project 2 -->
+        <a class="project-item relative flex flex-col gap-1 py-5 cursor-pointer group md:gap-0 reveal-up" href="https://t-empire.netlify.app/" target="_blank">
+          <div class="project-bg absolute inset-0 hidden md:block bg-black -z-10"></div>
+          <div class="project-content flex justify-between px-10 project-text text-black transition-all duration-500">
+            <h2 class="lg:text-[32px] text-[26px] leading-none">E-Commerce Platform</h2>
+            <svg xmlns="http://www.w3.org/2000/svg" class="md:size-6 size-5" width="1em" height="1em" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h10v10M7 17L17 7"/></svg>
+          </div>
+          <div class="w-full h-0.5 bg-black/80 mx-10" style="width: calc(100% - 5rem);"></div>
+          <div class="flex px-10 text-xs leading-loose uppercase gap-x-5 md:text-sm project-text text-black transition-colors duration-500">
+            <p>Python</p><p>Django</p><p>DRF</p><p>PostgreSQL</p>
+          </div>
+        </a>
+
+        <!-- Project 3 -->
+        <a class="project-item relative flex flex-col gap-1 py-5 cursor-pointer group md:gap-0 reveal-up" href="https://email-sender-com.vercel.app/" target="_blank">
+          <div class="project-bg absolute inset-0 hidden md:block bg-black -z-10"></div>
+          <div class="project-content flex justify-between px-10 project-text text-black transition-all duration-500">
+            <h2 class="lg:text-[32px] text-[26px] leading-none">GoToMail - Email Service</h2>
+            <svg xmlns="http://www.w3.org/2000/svg" class="md:size-6 size-5" width="1em" height="1em" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h10v10M7 17L17 7"/></svg>
+          </div>
+          <div class="w-full h-0.5 bg-black/80 mx-10" style="width: calc(100% - 5rem);"></div>
+          <div class="flex px-10 text-xs leading-loose uppercase gap-x-5 md:text-sm project-text text-black transition-colors duration-500">
+            <p>Python</p><p>Django</p><p>Brevo</p><p>React</p>
+          </div>
+        </a>
+
+        <!-- Project 4 -->
+        <a class="project-item relative flex flex-col gap-1 py-5 cursor-pointer group md:gap-0 reveal-up" href="https://data-handler2.vercel.app/" target="_blank">
+          <div class="project-bg absolute inset-0 hidden md:block bg-black -z-10"></div>
+          <div class="project-content flex justify-between px-10 project-text text-black transition-all duration-500">
+            <h2 class="lg:text-[32px] text-[26px] leading-none">DataHandler</h2>
+            <svg xmlns="http://www.w3.org/2000/svg" class="md:size-6 size-5" width="1em" height="1em" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h10v10M7 17L17 7"/></svg>
+          </div>
+          <div class="w-full h-0.5 bg-black/80 mx-10" style="width: calc(100% - 5rem);"></div>
+          <div class="flex px-10 text-xs leading-loose uppercase gap-x-5 md:text-sm project-text text-black transition-colors duration-500">
+            <p>Python</p><p>Django</p><p>Brevo</p><p>React</p>
+          </div>
+        </a>
+
+        <!-- Project 5 -->
+        <a class="project-item relative flex flex-col gap-1 py-5 cursor-pointer group md:gap-0 reveal-up" href="https://github.com/islam302/AirTravel-Booking-System" target="_blank">
+          <div class="project-bg absolute inset-0 hidden md:block bg-black -z-10"></div>
+          <div class="project-content flex justify-between px-10 project-text text-black transition-all duration-500">
+            <h2 class="lg:text-[32px] text-[26px] leading-none">AirTravel Booking System</h2>
+            <svg xmlns="http://www.w3.org/2000/svg" class="md:size-6 size-5" width="1em" height="1em" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h10v10M7 17L17 7"/></svg>
+          </div>
+          <div class="w-full h-0.5 bg-black/80 mx-10" style="width: calc(100% - 5rem);"></div>
+          <div class="flex px-10 text-xs leading-loose uppercase gap-x-5 md:text-sm project-text text-black transition-colors duration-500">
+            <p>Python</p><p>Django</p><p>PostgreSQL</p>
+          </div>
+        </a>
+
+        <!-- Project 6 -->
+        <a class="project-item relative flex flex-col gap-1 py-5 cursor-pointer group md:gap-0 reveal-up" href="https://soicalmagic.com/" target="_blank">
+          <div class="project-bg absolute inset-0 hidden md:block bg-black -z-10"></div>
+          <div class="project-content flex justify-between px-10 project-text text-black transition-all duration-500">
+            <h2 class="lg:text-[32px] text-[26px] leading-none">SocialMagic Platform</h2>
+            <svg xmlns="http://www.w3.org/2000/svg" class="md:size-6 size-5" width="1em" height="1em" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h10v10M7 17L17 7"/></svg>
+          </div>
+          <div class="w-full h-0.5 bg-black/80 mx-10" style="width: calc(100% - 5rem);"></div>
+          <div class="flex px-10 text-xs leading-loose uppercase gap-x-5 md:text-sm project-text text-black transition-colors duration-500">
+            <p>React</p><p>HTML</p><p>CSS</p><p>Bootstrap</p>
+          </div>
+        </a>
+
+        <!-- Project 7 -->
+        <a class="project-item relative flex flex-col gap-1 py-5 cursor-pointer group md:gap-0 reveal-up" href="https://github.com/islam302/SMTP_EMAILS_SENDER" target="_blank">
+          <div class="project-bg absolute inset-0 hidden md:block bg-black -z-10"></div>
+          <div class="project-content flex justify-between px-10 project-text text-black transition-all duration-500">
+            <h2 class="lg:text-[32px] text-[26px] leading-none">SMTP Email Sender</h2>
+            <svg xmlns="http://www.w3.org/2000/svg" class="md:size-6 size-5" width="1em" height="1em" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h10v10M7 17L17 7"/></svg>
+          </div>
+          <div class="w-full h-0.5 bg-black/80 mx-10" style="width: calc(100% - 5rem);"></div>
+          <div class="flex px-10 text-xs leading-loose uppercase gap-x-5 md:text-sm project-text text-black transition-colors duration-500">
+            <p>Python</p><p>smtplib</p><p>Pandas</p><p>Tkinter</p>
+          </div>
+        </a>
+
+        <!-- Project 8 -->
+        <a class="project-item relative flex flex-col gap-1 py-5 cursor-pointer group md:gap-0 reveal-up" href="https://github.com/islam302/Google-Yahoo-DuckDuckGo_SearchResults_Exractor" target="_blank">
+          <div class="project-bg absolute inset-0 hidden md:block bg-black -z-10"></div>
+          <div class="project-content flex justify-between px-10 project-text text-black transition-all duration-500">
+            <h2 class="lg:text-[32px] text-[26px] leading-none">Search Results Extractor</h2>
+            <svg xmlns="http://www.w3.org/2000/svg" class="md:size-6 size-5" width="1em" height="1em" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h10v10M7 17L17 7"/></svg>
+          </div>
+          <div class="w-full h-0.5 bg-black/80 mx-10" style="width: calc(100% - 5rem);"></div>
+          <div class="flex px-10 text-xs leading-loose uppercase gap-x-5 md:text-sm project-text text-black transition-colors duration-500">
+            <p>Python</p><p>Requests</p><p>BS4</p><p>Pandas</p>
+          </div>
+        </a>
+
+        <!-- Project 9 -->
+        <a class="project-item relative flex flex-col gap-1 py-5 cursor-pointer group md:gap-0 reveal-up" href="https://github.com/islam302/Excel-Data-Extractor" target="_blank">
+          <div class="project-bg absolute inset-0 hidden md:block bg-black -z-10"></div>
+          <div class="project-content flex justify-between px-10 project-text text-black transition-all duration-500">
+            <h2 class="lg:text-[32px] text-[26px] leading-none">Excel Data Extractor</h2>
+            <svg xmlns="http://www.w3.org/2000/svg" class="md:size-6 size-5" width="1em" height="1em" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h10v10M7 17L17 7"/></svg>
+          </div>
+          <div class="w-full h-0.5 bg-black/80 mx-10" style="width: calc(100% - 5rem);"></div>
+          <div class="flex px-10 text-xs leading-loose uppercase gap-x-5 md:text-sm project-text text-black transition-colors duration-500">
+            <p>Python</p><p>Openpyxl</p><p>Pandas</p><p>Tkinter</p>
+          </div>
+        </a>
+      </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section id="testimonials" class="min-h-screen bg-black rounded-t-[2.5rem] mt-20">
+      <div class="clip-reveal">
+        <div class="flex flex-col justify-center gap-12 pt-16 sm:gap-16 reveal-up">
+          <p class="text-sm font-light tracking-[0.4rem] uppercase px-10 text-white">WHAT MY CLIENTS SAY</p>
+          <div class="px-10">
+            <h1 class="flex flex-col gap-12 uppercase banner-text-responsive sm:gap-16 md:block text-white">
+              <span>Clients </span>
+            </h1>
+          </div>
+        </div>
+      </div>
+      <div class="relative px-10 text-white">
+        <div class="absolute inset-x-0 border-t-2 border-white/20"></div>
+        <div class="pt-12 sm:pt-16 text-start">
+          <div class="font-light uppercase value-text-responsive text-white reveal-up">
+            <span class="block leading-relaxed tracking-wide text-pretty">Trusted by clients who value</span>
+            <span class="block leading-relaxed tracking-wide text-pretty">&nbsp;&nbsp;&nbsp;&nbsp;quality, reliability, and dedication</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 px-10 py-16">
+        <!-- Testimonial 1 -->
+        <div class="testimonial-card bg-white/5 backdrop-blur-sm rounded-2xl p-8 reveal-up">
+          <div class="flex items-center gap-4 mb-6">
+            <img class="w-14 h-14 rounded-full object-cover" src="images/testimonial/cliet-sm-3.jpg" alt="Atif Alabbasi">
+            <div>
+              <p class="text-white font-semibold">Atif Alabbasi</p>
+              <p class="text-white/50 text-sm">Client</p>
+            </div>
+          </div>
+          <p class="text-white/70 leading-relaxed mb-4" dir="rtl">"شخص مميز راقي ومتعاون أسال الله لك التوفيق والنجاح - جودة الخدمة - التواصل والمتابعة - التسليم بالموعد"</p>
+          <div class="flex gap-1 text-yellow-400">
+            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+          </div>
+        </div>
+
+        <!-- Testimonial 2 -->
+        <div class="testimonial-card bg-white/5 backdrop-blur-sm rounded-2xl p-8 reveal-up">
+          <div class="flex items-center gap-4 mb-6">
+            <img class="w-14 h-14 rounded-full object-cover" src="images/testimonial/clent-sm-1.jpg" alt="Ahmed Khaled">
+            <div>
+              <p class="text-white font-semibold">Ahmed Khaled</p>
+              <p class="text-white/50 text-sm">User from Egypt</p>
+            </div>
+          </div>
+          <p class="text-white/70 leading-relaxed mb-4" dir="rtl">"شكرا جدا لحضرتك يابشمهندس اسلام شغل محترم جدا والشغل اتسلم زي ما انا محتاج بالظبط في الوقت المناسب وإنشاء الله مش اخر تعامل بينا"</p>
+          <div class="flex gap-1 text-yellow-400">
+            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+          </div>
+        </div>
+
+        <!-- Testimonial 3 -->
+        <div class="testimonial-card bg-white/5 backdrop-blur-sm rounded-2xl p-8 reveal-up">
+          <div class="flex items-center gap-4 mb-6">
+            <img class="w-14 h-14 rounded-full object-cover" src="images/testimonial/clent-sm-2.jpg" alt="Aymen Ahmed">
+            <div>
+              <p class="text-white font-semibold">Aymen Ahmed</p>
+              <p class="text-white/50 text-sm">Freelancer from Egypt</p>
+            </div>
+          </div>
+          <p class="text-white/70 leading-relaxed mb-4" dir="rtl">"جودة الخدمة - التواصل والمتابعة - التسليم بالموعد"</p>
+          <div class="flex gap-1 text-yellow-400">
+            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="min-h-screen bg-black rounded-b-none">
+      <div class="clip-reveal">
+        <div class="flex flex-col justify-center gap-12 pt-16 sm:gap-16 reveal-up">
+          <p class="text-sm font-light tracking-[0.4rem] uppercase px-10 text-white">LET'S BUILD SOMETHING GREAT TOGETHER</p>
+          <div class="px-10">
+            <h1 class="flex flex-col gap-12 uppercase banner-text-responsive sm:gap-16 md:block text-white">
+              <span>Contact </span>
+            </h1>
+          </div>
+        </div>
+      </div>
+      <div class="relative px-10 text-white">
+        <div class="absolute inset-x-0 border-t-2 border-white/20"></div>
+        <div class="pt-12 sm:pt-16 text-start">
+          <div class="font-light uppercase value-text-responsive text-white reveal-up">
+            <span class="block leading-relaxed tracking-wide text-pretty">Have a project in mind?</span>
+            <span class="block leading-relaxed tracking-wide text-pretty">&nbsp;&nbsp;&nbsp;&nbsp;Let's talk and make it happen.</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex flex-col lg:flex-row gap-16 px-10 py-16">
+        <!-- Contact Info -->
+        <div class="flex flex-col gap-10 lg:w-1/2">
+          <div class="reveal-up">
+            <p class="text-white/50 tracking-widest uppercase text-sm mb-2">Email</p>
+            <a href="mailto:islambadran39@gmail.com" class="text-2xl md:text-3xl text-white hover:text-white/70 transition-colors duration-300 font-light">islambadran39@gmail.com</a>
+          </div>
+          <div class="reveal-up">
+            <p class="text-white/50 tracking-widest uppercase text-sm mb-2">WhatsApp</p>
+            <a href="https://wa.me/201013919821" target="_blank" class="text-2xl md:text-3xl text-white hover:text-white/70 transition-colors duration-300 font-light">+20 101 391 9821</a>
+          </div>
+          <div class="reveal-up">
+            <p class="text-white/50 tracking-widest uppercase text-sm mb-2">Location</p>
+            <p class="text-2xl md:text-3xl text-white font-light">Tanta, Egypt</p>
+          </div>
+          <div class="reveal-up">
+            <p class="text-white/50 tracking-widest uppercase text-sm mb-4">Social Media</p>
+            <div class="flex flex-wrap gap-4">
+              <a href="https://github.com/islam302" target="_blank" class="flex items-center gap-2 text-white/70 hover:text-white transition-colors duration-300 text-lg">
+                <i class="fab fa-github text-2xl"></i> GitHub
+              </a>
+              <a href="https://www.linkedin.com/in/islam-badran-39a577225/" target="_blank" class="flex items-center gap-2 text-white/70 hover:text-white transition-colors duration-300 text-lg">
+                <i class="fab fa-linkedin text-2xl"></i> LinkedIn
+              </a>
+              <a href="https://www.facebook.com/islam.badran.77" target="_blank" class="flex items-center gap-2 text-white/70 hover:text-white transition-colors duration-300 text-lg">
+                <i class="fab fa-facebook text-2xl"></i> Facebook
               </a>
             </div>
           </div>
         </div>
-      </footer>
-      <!-- Footer end -->
 
+        <!-- Contact Form -->
+        <div class="lg:w-1/2">
+          <form class="flex flex-col gap-6" id="contactForm">
+            <div class="reveal-up">
+              <label class="text-white/50 text-sm tracking-widest uppercase block mb-2">Name</label>
+              <input type="text" class="w-full bg-transparent border-b-2 border-white/20 text-white text-xl py-3 focus:outline-none focus:border-white/60 transition-colors duration-300" placeholder="Your Name">
+            </div>
+            <div class="reveal-up">
+              <label class="text-white/50 text-sm tracking-widest uppercase block mb-2">Email</label>
+              <input type="email" class="w-full bg-transparent border-b-2 border-white/20 text-white text-xl py-3 focus:outline-none focus:border-white/60 transition-colors duration-300" placeholder="Your Email">
+            </div>
+            <div class="reveal-up">
+              <label class="text-white/50 text-sm tracking-widest uppercase block mb-2">Message</label>
+              <textarea rows="4" class="w-full bg-transparent border-b-2 border-white/20 text-white text-xl py-3 focus:outline-none focus:border-white/60 transition-colors duration-300 resize-none" placeholder="Your Message"></textarea>
+            </div>
+            <div class="reveal-up">
+              <button type="submit" class="px-12 py-4 bg-white text-black font-semibold uppercase tracking-widest text-sm rounded-full hover:bg-white/90 transition-all duration-300 mt-4">
+                Send Message
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
 
+      <!-- Footer -->
+      <div class="border-t border-white/10 mt-16 py-8 px-10 flex flex-col md:flex-row justify-between items-center gap-4">
+        <p class="text-white/40 text-sm">Copyright &copy; 2024 Islam Badran. All Rights Reserved.</p>
+        <a href="#home" class="text-white/40 hover:text-white transition-colors duration-300 text-sm uppercase tracking-widest">Back to Top</a>
+      </div>
+    </section>
+  </div>
 
+  <!-- JavaScript -->
+  <script>
+    // Preloader
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        document.getElementById('preloader').classList.add('hidden');
+        setTimeout(() => document.getElementById('preloader').remove(), 500);
+      }, 800);
+    });
 
+    // Hamburger Menu
+    const hamburger = document.getElementById('hamburger');
+    const navOverlay = document.getElementById('navOverlay');
+    let navOpen = false;
 
-      <!-- JavaScript -->
-      <script src="jquery/jquery.min.js"></script>
-      <script src="bootstrap/js/bootstrap.bundle.min.js"></script>
-      <!-- Easing -->
-      <script src="jquery.easing/jquery.easing.min.js"></script>
-      <!-- Appear -->
-      <script src="jquery.appear/jquery.appear.min.js"></script>
-      <!-- Images Loaded -->
-      <script src="imagesloaded/imagesloaded.pkgd.min.js"></script>
-      <!-- Counter -->
-      <script src="jquery.countTo/jquery.countTo.min.js"></script>
-      <!-- Parallax Bg -->
-      <script src="parallaxie/parallaxie.min.js"></script>
-      <!-- Typed -->
-      <script src="typed/typed.min.js"></script>
-      <!-- Owl Carousel -->
-      <script src="owl.carousel/owl.carousel.min.js"></script>
-      <!-- isotope Portfolio Filter -->
-      <script src="isotope/isotope.pkgd.min.js"></script>
-      <!-- Magnific Popup -->
-      <script src="magnific-popup/jquery.magnific-popup.min.js"></script>
-      <!-- Style Switcher -->
-      <script src="js/switcher.min.js"></script>
-      <!-- Custom Script -->
-      <script src="js/theme.js"></script>
+    hamburger.addEventListener('click', () => {
+      navOpen = !navOpen;
+      hamburger.classList.toggle('active');
+      navOverlay.classList.toggle('active');
+      document.body.style.overflow = navOpen ? 'hidden' : '';
+    });
 
+    function navigateTo(sectionId) {
+      navOpen = false;
+      hamburger.classList.remove('active');
+      navOverlay.classList.remove('active');
+      document.body.style.overflow = '';
+      setTimeout(() => {
+        document.getElementById(sectionId).scrollIntoView({ behavior: 'smooth' });
+      }, 300);
+    }
 
+    // GSAP Animations
+    gsap.registerPlugin(ScrollTrigger);
 
-  </body>
+    // Hero image parallax
+    const heroImage = document.getElementById('heroImage');
+    if (heroImage) {
+      gsap.to(heroImage, {
+        scale: 1.3,
+        y: 50,
+        scrollTrigger: {
+          trigger: heroImage.parentElement,
+          start: 'top top',
+          end: 'bottom top',
+          scrub: 1
+        }
+      });
+    }
 
+    // Animated SVG lines
+    document.querySelectorAll('.animated-line').forEach((line, i) => {
+      const duration = 3 + Math.random() * 4;
+      const delay = Math.random() * 3;
+      gsap.fromTo(line,
+        { strokeDasharray: `${0.1 + Math.random() * 0.5} 1`, opacity: 0 },
+        {
+          strokeDasharray: `${0.5 + Math.random() * 0.5} 1`,
+          opacity: 0.3 + Math.random() * 0.3,
+          duration: duration,
+          delay: delay,
+          repeat: -1,
+          yoyo: true,
+          ease: 'sine.inOut'
+        }
+      );
+    });
+
+    // Scroll reveal animations
+    const revealElements = document.querySelectorAll('.reveal-up');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('revealed');
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+    revealElements.forEach(el => observer.observe(el));
+
+    // Scrolling text parallax
+    gsap.to('.scroll-text-1', {
+      x: '15%',
+      scrollTrigger: {
+        trigger: '.scroll-text-1',
+        start: 'top bottom',
+        end: 'bottom top',
+        scrub: 1
+      }
+    });
+    gsap.to('.scroll-text-2', {
+      x: '-15%',
+      scrollTrigger: {
+        trigger: '.scroll-text-2',
+        start: 'top bottom',
+        end: 'bottom top',
+        scrub: 1
+      }
+    });
+    gsap.to('.scroll-text-3', {
+      x: '20%',
+      scrollTrigger: {
+        trigger: '.scroll-text-3',
+        start: 'top bottom',
+        end: 'bottom top',
+        scrub: 1
+      }
+    });
+
+    // Service cards animation
+    document.querySelectorAll('.service-card').forEach((card, i) => {
+      gsap.from(card, {
+        opacity: 0.5,
+        y: 30,
+        scrollTrigger: {
+          trigger: card,
+          start: 'top 80%',
+          end: 'top 30%',
+          scrub: 1
+        }
+      });
+    });
+
+    // Contact form (just for show - logs to console)
+    document.getElementById('contactForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      alert('Thank you for your message! I will get back to you soon.');
+    });
+  </script>
+</body>
 </html>
-

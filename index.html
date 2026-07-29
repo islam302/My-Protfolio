@@ -3,8 +3,62 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="icon" type="image/jpeg" href="images/logo--.jpg">
-  <title>Islam Badran</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="64x64" href="/favicon.png">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.jpg">
+
+  <!-- Primary SEO -->
+  <title>Islam Badran — Python Developer &amp; Backend Engineer</title>
+  <meta name="description" content="Islam Badran is a passionate Python Developer and Backend Engineer building scalable web applications, APIs, and automation tools. Explore projects, skills, and get in touch.">
+  <meta name="keywords" content="Islam Badran, Python Developer, Backend Engineer, Django, REST API, Web Developer, Automation, Portfolio">
+  <meta name="author" content="Islam Badran">
+  <meta name="robots" content="index, follow">
+  <meta name="theme-color" content="#020617">
+  <link rel="canonical" href="https://www.islammohamed.online/">
+
+  <!-- Open Graph (Facebook, LinkedIn) -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.islammohamed.online/">
+  <meta property="og:title" content="Islam Badran — Python Developer &amp; Backend Engineer">
+  <meta property="og:description" content="Passionate Python Developer and Backend Engineer building scalable web applications, APIs, and automation tools.">
+  <meta property="og:image" content="https://www.islammohamed.online/og-image.jpg">
+  <meta property="og:image:alt" content="Islam Badran — Python Developer & Backend Engineer">
+  <meta property="og:site_name" content="Islam Badran">
+  <meta property="og:locale" content="en_US">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Islam Badran — Python Developer &amp; Backend Engineer">
+  <meta name="twitter:description" content="Passionate Python Developer and Backend Engineer building scalable web applications, APIs, and automation tools.">
+  <meta name="twitter:image" content="https://www.islammohamed.online/og-image.jpg">
+
+  <!-- JSON-LD Structured Data (Schema.org Person) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Islam Badran",
+    "url": "https://www.islammohamed.online/",
+    "image": "https://www.islammohamed.online/og-image.jpg",
+    "jobTitle": "Python Developer & Backend Engineer",
+    "description": "Passionate Python Developer and Backend Engineer building scalable web applications, APIs, and automation tools.",
+    "alumniOf": {
+      "@type": "CollegeOrUniversity",
+      "name": "Al-Azhar University"
+    },
+    "knowsAbout": ["Python", "Django", "REST APIs", "Backend Development", "Web Development", "Automation"],
+    "sameAs": [
+      "https://github.com/islam302",
+      "https://www.linkedin.com/in/islam-badran-39a577225/",
+      "https://www.facebook.com/islam.badran.77"
+    ]
+  }
+  </script>
+
+  <!-- Preconnect for faster asset loading -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com">
 
   <!-- Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -277,7 +331,10 @@
 
       <!-- Hero Image -->
       <div class="relative w-full max-w-[950px] h-[550px] md:h-[700px] z-10">
-        <img alt="Islam Badran" class="absolute inset-0 w-full h-full object-cover z-10 transition-transform duration-300 ease-out" src="images/islam.png" style="object-position: center 35%; transform-origin: center 35%;" id="heroImage">
+        <picture>
+          <source srcset="images/islam.webp" type="image/webp">
+          <img alt="Islam Badran — Python Developer and Backend Engineer" class="absolute inset-0 w-full h-full object-cover z-10 transition-transform duration-300 ease-out" src="images/islam-hero.jpg" style="object-position: center 35%; transform-origin: center 35%;" id="heroImage" fetchpriority="high" width="994" height="1280">
+        </picture>
         <!-- Scan overlay -->
         <div class="absolute inset-0 z-20 pointer-events-none animate-scanner">
           <div class="w-full h-full bg-gradient-to-b from-transparent via-cyan-400/10 to-transparent"></div>
@@ -340,9 +397,9 @@
         <div class="flex flex-col justify-center gap-12 pt-16 sm:gap-16 reveal-up">
           <p class="text-sm font-light tracking-[0.4rem] uppercase px-10 text-white">CRAFTING WITH &lt;CODE /&gt; AND CREATIVITY</p>
           <div class="px-10">
-            <h1 class="flex flex-col gap-12 uppercase banner-text-responsive sm:gap-16 md:block text-white">
+            <h2 class="flex flex-col gap-12 uppercase banner-text-responsive sm:gap-16 md:block text-white">
               <span>Services </span>
-            </h1>
+            </h2>
           </div>
         </div>
       </div>
@@ -453,9 +510,9 @@
         <div class="flex flex-col justify-center gap-12 pt-16 sm:gap-16 reveal-up">
           <p class="text-sm font-light tracking-[0.4rem] uppercase px-10 text-white">Code with purpose, Built to scale</p>
           <div class="px-10">
-            <h1 class="flex flex-col gap-12 uppercase banner-text-responsive sm:gap-16 md:block text-white">
+            <h2 class="flex flex-col gap-12 uppercase banner-text-responsive sm:gap-16 md:block text-white">
               <span>About </span>
-            </h1>
+            </h2>
           </div>
         </div>
       </div>
@@ -502,9 +559,9 @@
         <div class="flex flex-col justify-center gap-12 pt-16 sm:gap-16 reveal-up">
           <p class="text-sm font-light tracking-[0.4rem] uppercase px-10 text-black">Logic meets Functionality, Seamlessly</p>
           <div class="px-10">
-            <h1 class="flex flex-col gap-12 uppercase banner-text-responsive sm:gap-16 md:block text-black">
+            <h2 class="flex flex-col gap-12 uppercase banner-text-responsive sm:gap-16 md:block text-black">
               <span>Projects </span>
-            </h1>
+            </h2>
           </div>
         </div>
       </div>
@@ -646,9 +703,9 @@
         <div class="flex flex-col justify-center gap-12 pt-16 sm:gap-16 reveal-up">
           <p class="text-sm font-light tracking-[0.4rem] uppercase px-10 text-white">WHAT MY CLIENTS SAY</p>
           <div class="px-10">
-            <h1 class="flex flex-col gap-12 uppercase banner-text-responsive sm:gap-16 md:block text-white">
+            <h2 class="flex flex-col gap-12 uppercase banner-text-responsive sm:gap-16 md:block text-white">
               <span>Clients </span>
-            </h1>
+            </h2>
           </div>
         </div>
       </div>
@@ -716,9 +773,9 @@
         <div class="flex flex-col justify-center gap-12 pt-16 sm:gap-16 reveal-up">
           <p class="text-sm font-light tracking-[0.4rem] uppercase px-10 text-white">LET'S BUILD SOMETHING GREAT TOGETHER</p>
           <div class="px-10">
-            <h1 class="flex flex-col gap-12 uppercase banner-text-responsive sm:gap-16 md:block text-white">
+            <h2 class="flex flex-col gap-12 uppercase banner-text-responsive sm:gap-16 md:block text-white">
               <span>Contact </span>
-            </h1>
+            </h2>
           </div>
         </div>
       </div>

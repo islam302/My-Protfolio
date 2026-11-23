@@ -131,7 +131,7 @@ export default () => ({
   styles: ['home.css'],
   scripts: ['home.js'],
   priority: 1,
-  head: html`<link rel="preload" href="${HERO}/plate.webp" as="image" fetchpriority="high">`,
+  head: html`<link rel="preload" href="${HERO}/plate.webp?v=2" as="image" fetchpriority="high">`,
   jsonLd: [
     {
       '@type': 'ItemList',
@@ -151,9 +151,9 @@ export default () => ({
 
 <div class="stage" id="stage">
   <div class="frame d-fade" id="frame">
-    <img class="plate" id="plate" src="${HERO}/plate.webp" width="2048" height="1374" alt="" decoding="async" fetchpriority="high">
+    <img class="plate" id="plate" src="${HERO}/plate.webp?v=2" width="2048" height="1374" alt="" decoding="async" fetchpriority="high">
     ${wordmark({ id: 'wm', cls: 'wm', h: 260, x: 14, y: 214, len: 1412, fade: '.28' })}
-    <img class="cut" id="cut" src="${HERO}/cut.webp" width="2048" height="1374" alt="Islam Badran holding a retro phone and an open laptop" decoding="async">
+    <img class="cut" id="cut" src="${HERO}/cut.webp?v=2" width="2048" height="1374" alt="Islam Badran holding a retro phone and an open laptop" decoding="async">
     ${badge({ id: 'badge', cls: 'pre', withLinks: true })}
     <div class="hero-script pre" id="script" aria-hidden="true">software-engineer</div>
     <video class="trans" id="trans" muted playsinline preload="auto" data-src="${DIVE_CLIP}" aria-hidden="true"></video>

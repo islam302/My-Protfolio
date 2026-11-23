@@ -20,7 +20,7 @@ export function personLd() {
     jobTitle: site.role,
     description: site.description,
     url: site.url + '/',
-    image: abs('/images/hero/cut.webp'),
+    image: abs('/images/hero/cut.webp?v=2'),
     email: `mailto:${site.email}`,
     worksFor: { '@type': 'Organization', name: site.company.name, url: site.company.url },
     address: { '@type': 'PostalAddress', addressCountry: site.location.countryCode },

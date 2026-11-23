@@ -95,7 +95,7 @@ export default () => ({
     </div>
   </div>
   <figure class="pg-about-hero__photo">
-    <img src="/images/hero/cut.webp" alt="Islam Badran in a black leather jacket and tie, holding a laptop and an old brick phone" width="2048" height="1374" fetchpriority="high" decoding="async">
+    <img src="/images/hero/cut.webp?v=2" alt="Islam Badran in a black leather jacket and tie, holding a laptop and an old brick phone" width="2048" height="1374" fetchpriority="high" decoding="async">
   </figure>
 </section>
 

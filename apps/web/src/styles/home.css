@@ -85,7 +85,7 @@
 .card .yr { position: absolute; right: 16px; top: 62px; font-size: 11px; font-weight: 700; }
 .card .role { margin-top: 12px; padding-top: 5px; border-top: 1px solid #222; font-size: 9.5px; font-weight: 700; letter-spacing: .2px; }
 .card .ph {
-  width: 92px; height: 112px; margin: 12px auto; border-radius: 6px; background: #dfe4ee url(/images/hero/cut.webp) no-repeat -179px -7px / 417px 280px;
+  width: 92px; height: 112px; margin: 12px auto; border-radius: 6px; background: #dfe4ee url(/images/hero/cut.webp?v=2) no-repeat -179px -7px / 417px 280px;
   box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .06);
 }
 .card .row { display: flex; justify-content: space-between; align-items: flex-end; font-size: 9px; font-weight: 700; padding: 6px 0 3px; border-bottom: 1.5px dotted #333; }

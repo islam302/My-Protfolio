@@ -30,5 +30,14 @@ export function html(strings, ...values) {
   return new SafeHtml(out);
 }
 
+/**
+ * Keep hyphenated words together in display headings ("E-commerce" never splits as
+ * "E-" / "commerce"): each hyphenated word goes in a `.nobr` span. The text content is
+ * unchanged, so accessible names, tests and copy/paste see the plain title.
+ * @param {string} s
+ */
+export const keepHyphens = (s) =>
+  String(s).split(/(\S+-\S+)/).map((part, i) => (i % 2 ? html`<span class="nobr">${part}</span>` : part));
+
 /** Join class names, skipping falsy values. */
 export const cx = (...c) => c.filter(Boolean).join(' ');

@@ -107,7 +107,7 @@ test.describe('contact hand-off', () => {
     expect(calls).toHaveLength(1);
     expect(calls[0].target).toBe('_blank');
     const url = new URL(calls[0].url);
-    expect(url.origin + url.pathname).toBe('https://wa.me/201505858198');
+    expect(url.origin + url.pathname).toBe('https://wa.me/201013919821');
     const text = /** @type {string} */ (url.searchParams.get('text'));
     expect(text).toBe(
       [
@@ -141,7 +141,7 @@ test.describe('contact hand-off', () => {
     await page.getByRole('button', { name: /Send on WhatsApp/ }).click();
     const status = page.locator('.pg-form__status');
     await expect(status).toContainText('Your browser blocked the new tab.');
-    await expect(status.getByRole('link', { name: 'Open WhatsApp' })).toHaveAttribute('href', /^https:\/\/wa\.me\/201505858198\?text=/);
+    await expect(status.getByRole('link', { name: 'Open WhatsApp' })).toHaveAttribute('href', /^https:\/\/wa\.me\/201013919821\?text=/);
     const href = await status.locator('a').getAttribute('href');
     const text = new URL(/** @type {string} */ (href)).searchParams.get('text');
     expect(text).not.toContain('Budget:');
@@ -187,11 +187,18 @@ test.describe('contact hand-off', () => {
     await expect(page.locator('#f-type')).toHaveValue('ai');
   });
 
-  test('channel cards link to WhatsApp, email and Instagram', async ({ page }) => {
+  test('channel cards link to WhatsApp, email, Instagram, LinkedIn and Facebook', async ({ page }) => {
     await page.goto('/contact/');
-    await expect(page.locator('.pg-channel--whatsapp')).toHaveAttribute('href', /^https:\/\/wa\.me\/201505858198/);
+    await expect(page.locator('.pg-channel--whatsapp')).toHaveAttribute('href', /^https:\/\/wa\.me\/201013919821/);
+    await expect(page.locator('.pg-channel--whatsapp .pg-channel__num')).toHaveText(['+20 101 391 9821', '+20 150 585 8198']);
     await expect(page.locator('.pg-channel--email')).toHaveAttribute('href', /^mailto:admin@etqanpp\.com\?subject=Project%20enquiry$/);
     await expect(page.locator('.pg-channel--instagram')).toHaveAttribute('href', 'https://www.instagram.com/islam__badran/');
+    await expect(page.locator('.pg-channel--linkedin')).toHaveAttribute('href', 'https://www.linkedin.com/in/islam-badran-39a577225/');
+    await expect(page.locator('.pg-channel--facebook')).toHaveAttribute('href', 'https://www.facebook.com/profile.php?id=61591731281871');
+    for (const c of ['linkedin', 'facebook']) {
+      await expect(page.locator(`.pg-channel--${c}`)).toHaveAttribute('rel', 'noopener');
+      await expect(page.locator(`.site-footer a[href*="${c}.com"]`)).toHaveCount(1);
+    }
   });
 
   test('without JavaScript the form falls back to its mailto: action', async ({ browser, baseURL }) => {

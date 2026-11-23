@@ -43,6 +43,26 @@ export const SHOTS = [
     },
   },
   { slug: 'teslla-study', name: 'cover', url: 'https://tesllastudy.com/', width: 1728, height: 965, settle: 2500 },
+  // A first-order discount popup opens a moment after load; close it with its own "not now" link.
+  {
+    slug: 'alreef', name: 'cover', url: 'https://www.alref.net/', width: 1728, height: 962, settle: 2500,
+    prepare: async (page) => {
+      const notNow = page.getByRole('button', { name: 'مش دلوقتي' }).or(page.getByRole('link', { name: 'مش دلوقتي' })).first();
+      try {
+        await notNow.click({ timeout: 10_000 });
+      } catch {
+        // No popup this time (already dismissed or not shown): nothing to close.
+      }
+      await page.waitForTimeout(800); // popup exit animation
+      // Closing it leaves a small reminder pill in the corner; hide that too (its own close button).
+      try {
+        await page.locator('.welcome-pill__close').click({ timeout: 5_000 });
+      } catch {
+        // Pill not shown: nothing to hide.
+      }
+      await page.waitForTimeout(600);
+    },
+  },
 ];
 
 const only = process.argv[2];

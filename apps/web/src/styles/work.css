@@ -75,6 +75,28 @@ html:not(.js) .work-target:target ~ .work-filter [data-filter='all'] { backgroun
 .work-card__arrow { display: inline-block; transition: transform .3s var(--ease); }
 .work-card:hover .work-card__arrow { transform: translateX(4px); }
 
+/* ---------- client & private work (text cards, no links) ---------- */
+.work-private { padding-bottom: var(--section); }
+.work-private__head { padding-top: clamp(32px, 5vw, 56px); border-top: 1px solid var(--line); margin-bottom: clamp(28px, 4vw, 44px); }
+.work-private__head > * { max-width: 760px; }
+.work-private__head .display { margin-top: 14px; }
+.work-private__head .script { text-transform: none; letter-spacing: 0; font-size: .9em; }
+.work-private__head .lead { margin-top: 18px; }
+.work-private__grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 330px), 1fr)); gap: clamp(18px, 2.4vw, 30px); list-style: none; }
+.work-private__card {
+  display: flex; flex-direction: column; gap: 10px; min-width: 0; padding: 22px 22px 24px; border-radius: var(--radius-lg);
+  background: color-mix(in srgb, var(--white) 4%, transparent); border: 1px solid var(--line);
+}
+.work-private__meta { display: flex; align-items: center; gap: 12px; min-width: 0; margin-bottom: 4px; }
+.work-private__status {
+  flex: none; display: inline-flex; align-items: center; height: 28px; padding: 0 11px; background: var(--white); color: var(--ink);
+  font-weight: 650; font-size: 13.5px; letter-spacing: -.01em; line-height: 1; white-space: nowrap; box-shadow: var(--sticker-shadow); transform: rotate(-2deg);
+}
+.work-private__card:nth-child(3n + 2) .work-private__status { transform: rotate(1.5deg); }
+.work-private__card .work-card__title { overflow-wrap: anywhere; }
+.work-private__ar { font-family: var(--font-ar); font-weight: 700; font-size: .72em; text-transform: none; color: var(--fg-2); white-space: nowrap; }
+.work-private__stack { margin-top: auto; padding-top: 8px; }
+
 /* ---------- logo sticker ---------- */
 .logo-badge {
   flex: none; display: inline-grid; place-items: center; width: 54px; height: 54px; padding: 9px; background: var(--white);

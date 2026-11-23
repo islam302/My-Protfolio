@@ -25,7 +25,7 @@ export function personLd() {
     worksFor: { '@type': 'Organization', name: site.company.name, url: site.company.url },
     address: { '@type': 'PostalAddress', addressCountry: site.location.countryCode },
     knowsAbout: ['Web development', 'Mobile app development', 'React Native', 'AI products', 'E-commerce', 'Arabic-first (RTL) interfaces'],
-    sameAs: [links.instagram],
+    sameAs: [links.instagram, links.linkedin, links.facebook],
   };
 }
 

@@ -6,7 +6,7 @@ const count = (cat) => PROJECTS.filter((p) => p.cat === cat).length;
 const visibleCards = (/** @type {import('@playwright/test').Page} */ page) => page.locator('.work-grid > li:not([hidden])');
 
 test.describe('/work/ grid', () => {
-  test('lists all 7 case studies, each card links to its page', async ({ page }) => {
+  test('lists all 8 case studies, each card links to its page', async ({ page }) => {
     await page.goto('/work/');
     await expect(page.locator('.work-grid > li')).toHaveCount(PROJECTS.length);
     const hrefs = await page.locator('.work-card__link').evaluateAll((as) => as.map((a) => a.getAttribute('href')));

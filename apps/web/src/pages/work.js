@@ -1,8 +1,9 @@
-import { html, raw, cx } from '../lib/html.js';
+import { html, raw, cx, keepHyphens } from '../lib/html.js';
 import { abs, breadcrumbLd, personId, websiteId } from '../lib/seo.js';
 import { projects, categories, cardSrc } from '../data/projects.js';
 import { webpSize } from '../lib/images.js';
 import { crumbs } from '../templates/partials.js';
+import { privateWork } from '../data/private-work.js';
 
 /* ------------------------------------------------------------------ helpers
  * Shared with src/pages/project.js (related-work cards on case studies).
@@ -42,10 +43,25 @@ export function projectCard(p, { level = 2, reveal = true } = {}) {
   </div>
   <div class="work-card__body">
     <div class="work-card__meta">${logoBadge(p, 'logo-badge logo-badge--sm')}<span class="work-card__label">${p.label}</span></div>
-    ${h(html`<a class="work-card__link" href="/work/${p.slug}/">${p.title}</a>`)}
+    ${h(html`<a class="work-card__link" href="/work/${p.slug}/">${keepHyphens(p.title)}</a>`)}
     <p class="work-card__tagline">${p.tagline}</p>
     <span class="work-card__more" aria-hidden="true">Read the case study <span class="work-card__arrow">→</span></span>
   </div>
+</li>`;
+}
+
+/**
+ * Text-only card for client / private work: no link, no image.
+ * @param {import('../data/private-work.js').PrivateWork} w
+ * @param {number} i
+ */
+function privateCard(w, i) {
+  return html`
+<li class="work-private__card" data-reveal style="--d:${(i % 3) * 0.06}s">
+  <div class="work-private__meta"><span class="work-private__status">${w.status}</span><span class="work-card__label">${w.kind}</span></div>
+  <h3 class="work-card__title">${w.name}${w.nameAr ? html` <span class="work-private__ar" lang="ar" dir="rtl">${w.nameAr}</span>` : ''}</h3>
+  <p class="work-card__tagline">${w.summary}</p>
+  <ul class="chips work-private__stack" aria-label="Stack">${w.stack.map((t) => html`<li class="chip">${t}</li>`)}</ul>
 </li>`;
 }
 
@@ -124,6 +140,19 @@ export default () => {
     <p class="sr-only" id="work-status" role="status" aria-live="polite"></p>
     <ul class="work-grid">
       ${projects.map((p) => projectCard(p))}
+    </ul>
+  </div>
+</section>
+
+<section class="work-private" aria-labelledby="private-title">
+  <div class="container">
+    <div class="work-private__head">
+      <p class="eyebrow">Client &amp; private work</p>
+      <h2 class="display display--m" id="private-title">Behind <span class="script">closed</span> doors</h2>
+      <p class="lead">Products built for clients under NDA or still in development, and ideas we prototyped. No public links.</p>
+    </div>
+    <ul class="work-private__grid">
+      ${privateWork.map((w, i) => privateCard(w, i))}
     </ul>
   </div>
 </section>`,

@@ -69,6 +69,8 @@ export function footer() {
       <p class="eyebrow">Elsewhere</p>
       <ul>
         <li><a href="${links.instagram}" target="_blank" rel="noopener">Instagram</a></li>
+        <li><a href="${links.linkedin}" target="_blank" rel="noopener">LinkedIn</a></li>
+        <li><a href="${links.facebook}" target="_blank" rel="noopener">Facebook</a></li>
         <li><a href="${links.whatsapp()}" target="_blank" rel="noopener">WhatsApp</a></li>
         <li><a href="${site.company.url}" target="_blank" rel="noopener">${site.company.name}</a></li>
       </ul>

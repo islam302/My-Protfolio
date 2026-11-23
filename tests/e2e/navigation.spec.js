@@ -24,7 +24,7 @@ test.describe('header navigation', () => {
     await page.goto('/services/');
     if (isCollapsedNav(page)) await page.locator('.nav-toggle').click();
     const link = page.locator('#site-nav a.tag--accent');
-    await expect(link).toHaveAttribute('href', /^https:\/\/wa\.me\/201505858198\?text=/);
+    await expect(link).toHaveAttribute('href', /^https:\/\/wa\.me\/201013919821\?text=/);
     await expect(link).toHaveAttribute('target', '_blank');
     await expect(link).toHaveAttribute('rel', /noopener/);
   });
@@ -132,7 +132,7 @@ test.describe('home page navigation', () => {
     await expect(page.locator('body')).not.toHaveClass(/\bbusy\b/, { timeout: 5_000 });
     await page.locator('#next').click();
     await expect(page.locator('#tTitle')).toHaveText('Etqan Tutor', { timeout: 5_000 });
-    await expect(page.locator('#dNum')).toHaveText('02 / 07');
+    await expect(page.locator('#dNum')).toHaveText('02 / 08');
     await page.locator('#dLink').click();
     await expect(page).toHaveURL(/\/work\/etqan-tutor\/$/);
   });
@@ -178,8 +178,8 @@ test.describe('keyboard & skip link', () => {
     const pressUntil = async (key, check) => expect(async () => { await page.keyboard.press(key); await check(); }).toPass({ timeout: 5_000 });
     const body = page.locator('body');
     await pressUntil('ArrowDown', () => expect(body).toHaveClass(/is-case/, { timeout: 300 }));
-    await pressUntil('ArrowRight', () => expect(page.locator('#dNum')).toHaveText('02 / 07', { timeout: 300 }));
-    await pressUntil('ArrowLeft', () => expect(page.locator('#dNum')).toHaveText('01 / 07', { timeout: 300 }));
+    await pressUntil('ArrowRight', () => expect(page.locator('#dNum')).toHaveText('02 / 08', { timeout: 300 }));
+    await pressUntil('ArrowLeft', () => expect(page.locator('#dNum')).toHaveText('01 / 08', { timeout: 300 }));
     await pressUntil('Escape', () => expect(body).not.toHaveClass(/is-case/, { timeout: 300 }));
   });
 });

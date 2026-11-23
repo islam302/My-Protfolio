@@ -179,12 +179,25 @@
   background: var(--navy-800); border: 1px solid var(--line);
   transition: transform .3s var(--ease), background-color .25s, border-color .25s;
 }
+/* Five channels: WhatsApp full-width on two columns; on three columns the first three
+   share row one and LinkedIn + Facebook split row two, so no row is left half-empty. */
+@media (min-width: 640px) and (max-width: 979.98px) {
+  .pg-channels { grid-template-columns: repeat(2, 1fr); }
+  .pg-channel--whatsapp { grid-column: 1 / -1; }
+}
+@media (min-width: 980px) {
+  .pg-channels { grid-template-columns: repeat(6, 1fr); }
+  .pg-channel { grid-column: span 2; }
+  .pg-channel--linkedin, .pg-channel--facebook { grid-column: span 3; }
+}
 .pg-channel:hover { transform: translateY(-4px) rotate(-.6deg); border-color: var(--sky); }
 .pg-channel--whatsapp { background: var(--sky); color: var(--navy-900); border-color: var(--sky); }
 .pg-channel__icon { display: grid; place-items: center; width: 54px; height: 54px; margin-bottom: 10px; border-radius: 50%; background: var(--white); color: var(--navy-900); box-shadow: var(--sticker-shadow); }
 .pg-channel--whatsapp .pg-channel__icon { background: var(--navy-900); color: var(--sky); }
 .pg-channel__label { font-size: var(--step--1); font-weight: 700; letter-spacing: .18em; text-transform: uppercase; opacity: .8; }
 .pg-channel__value { font-family: var(--font-display); text-transform: uppercase; font-size: clamp(1.5rem, 1.2rem + 1.2vw, 2.2rem); line-height: 1; overflow-wrap: anywhere; }
+.pg-channel__num { display: block; white-space: nowrap; }
+.pg-channel__num + .pg-channel__num { margin-top: .15em; }
 .pg-channel--email .pg-channel__value { text-transform: none; font-family: var(--font-sans); font-weight: 800; letter-spacing: -.02em; }
 .pg-channel__note { opacity: .8; }
 .pg-channel__cta { margin-top: auto; padding-top: 12px; font-weight: 700; }

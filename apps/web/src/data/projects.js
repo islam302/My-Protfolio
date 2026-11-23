@@ -133,6 +133,24 @@ export const projects = [
     },
   },
   {
+    slug: 'alreef',
+    title: 'Alreef E-commerce',
+    category: 'E-commerce',
+    kind: 'web',
+    label: 'E-commerce · Full stack',
+    platform: 'Arabic-first web store',
+    tagline: 'Egyptian honey, ordered online.',
+    summary:
+      'An Arabic-first online store for an Egyptian honey brand, with its own API and an operations dashboard behind it.',
+    chips: ['E-commerce', 'RTL', 'Store + dashboard'],
+    theme: { bg: '#0c2c21', ac: '#e2a940', fg: '#f5f1e7' },
+    images: {
+      cover: { src: `${dir('alreef')}/cover.webp`, w: 1600, h: 891, alt: 'Alreef Arabic store home page: “Bee honey and its products from the Egyptian countryside” over a honey-dipper video, with a limited-time offer card' },
+      logo: `${dir('alreef')}/logo.webp`,
+      gallery: [],
+    },
+  },
+  {
     slug: 'etqan',
     title: 'ETQAN',
     category: 'Web',
@@ -341,6 +359,35 @@ const caseStudies = {
       'The goal was a site that feels equally native in Arabic and English and keeps every page pointing toward one next step: talking to an advisor.',
     ],
     deliverables: ['Bilingual website', 'Arabic RTL layout', 'Consultation form', 'University listings'],
+  },
+
+  alreef: {
+    seo: {
+      title: 'Alreef E-commerce — Arabic-First Honey Store & Operations Case Study',
+      description: 'Alreef is an Arabic-first online store for an Egyptian honey brand: a React storefront, a Django REST API with FEFO stock, and an operations dashboard.',
+    },
+    facts: [['Language', 'Arabic (RTL)'], ['Built with', 'React · Django REST Framework']],
+    overview: [
+      'Alreef (عسل نحل الريف) is an Egyptian brand of bee honey and bee products that sells online and ships to every governorate in Egypt. The storefront opens with “Bee honey and its products from the Egyptian countryside” and one simple invitation: pick the type that suits you and see the offers before you order.',
+      'The project is the whole platform behind the shop: an Arabic-first, right-to-left storefront, an internal operations dashboard, and the API both of them run on.',
+    ],
+    problem: [
+      'Honey is hard to buy online. Types differ in taste, texture and price, the same product comes in several weights, and many customers simply do not know which one to pick. Behind the counter, stock has expiry dates and orders need to be confirmed, shipped and tracked.',
+      'Alreef needed a store that explains its products in plain Arabic and makes comparing them easy, backed by tools that keep stock, offers and orders under control.',
+    ],
+    features: [
+      { title: 'Arabic-first, right to left', text: 'The storefront is built in Arabic from the start, with a true right-to-left layout and every product shown with its type, weight and price.' },
+      { title: '“Not sure what to choose?”', text: 'A help-me-choose flow asks how you like the taste or what you will use the honey for, then recommends from what is in stock.' },
+      { title: 'Offers with clear prices', text: 'Bundles and offers show the price before and after the discount and how much you save, with a weight picker on each product.' },
+      { title: 'A buying guide', text: 'Short guides compare honey types by taste, texture and use, and explain why colour and texture vary.' },
+      { title: 'Checkout, delivery and tracking', text: 'Cash on delivery, shipping to all governorates and an order-tracking page, with WhatsApp one tap away and customer messages on the home page.' },
+      { title: 'An API and an operations dashboard', text: 'A Django REST API handles the catalogue, cart, promotions, coupons, checkout and FEFO (first-expiry-first-out) stock, and an internal dashboard runs orders, products, stock and coupons.' },
+    ],
+    role: [
+      'I built Alreef at ETQAN ++ as a full-stack engineer, across the React storefront, the Django REST API and the operations dashboard.',
+      'The focus was making an Arabic-first shop that helps people choose, and pairing it with a back end that keeps prices, offers and stock honest from the product page to the delivered order.',
+    ],
+    deliverables: ['Arabic RTL storefront', 'REST API', 'Operations dashboard', 'Checkout & order tracking'],
   },
 
   etqan: {

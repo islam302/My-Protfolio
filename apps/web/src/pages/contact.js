@@ -11,8 +11,10 @@ const trail = [
   { name: 'Contact', path: '/contact/' },
 ];
 
-/** "+20 150 585 8198" from "201505858198". */
-const phonePretty = `+${site.whatsapp.slice(0, 2)} ${site.whatsapp.slice(2, 5)} ${site.whatsapp.slice(5, 8)} ${site.whatsapp.slice(8)}`;
+/** "+20 101 391 9821" from "201013919821". */
+const pretty = (n) => `+${n.slice(0, 2)} ${n.slice(2, 5)} ${n.slice(5, 8)} ${n.slice(8)}`;
+/** Both numbers (phone + WhatsApp), primary first, one per line so a number never breaks. */
+const phonesHtml = site.phones.map((n) => html`<span class="pg-channel__num">${pretty(n)}</span>`);
 
 const budgets = BUDGETS;
 const timelines = TIMELINES;
@@ -24,13 +26,15 @@ const icon = {
   whatsapp: html`<svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true" focusable="false"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2c-1.5 0-3-.4-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.3-.4.7-1.4.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2c0 1.3.9 2.5 1 2.7.1.2 1.8 2.8 4.5 3.9 1.7.7 2.3.8 3.2.6.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.2-1.2-.1-.3-.3-.3-.5-.4Z"/></svg>`,
   email: html`<svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" d="M3 5.5h18v13H3z M3.5 6l8.5 7 8.5-7"/></svg>`,
   instagram: html`<svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true" focusable="false"><rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="17.4" cy="6.6" r="1.2" fill="currentColor"/></svg>`,
+  linkedin: html`<svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true" focusable="false"><rect x="3" y="3" width="18" height="18" rx="4" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="8.2" cy="7.9" r="1.2" fill="currentColor"/><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" d="M8.2 10.8V17M12 17v-6.2M12 13.6a2.6 2.6 0 0 1 5.2 0V17"/></svg>`,
+  facebook: html`<svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true" focusable="false"><path fill="currentColor" d="M13.4 21v-7.3h2.4l.4-2.9h-2.8V9c0-.8.3-1.4 1.4-1.4h1.5V5a20 20 0 0 0-2.2-.1c-2.2 0-3.7 1.3-3.7 3.8v2.1H8v2.9h2.4V21Z"/></svg>`,
 };
 
 const channels = [
   {
     key: 'whatsapp',
     label: 'WhatsApp',
-    value: phonePretty,
+    value: phonesHtml,
     note: 'Fastest way to reach me. Say hi and tell me what you have in mind.',
     href: links.whatsapp(),
     external: true,
@@ -52,6 +56,24 @@ const channels = [
     href: links.instagram,
     external: true,
     cta: 'Open Instagram',
+  },
+  {
+    key: 'linkedin',
+    label: 'LinkedIn',
+    value: site.name,
+    note: 'Experience, projects and the professional side. Connect or message me there.',
+    href: links.linkedin,
+    external: true,
+    cta: 'Open LinkedIn',
+  },
+  {
+    key: 'facebook',
+    label: 'Facebook',
+    value: site.name,
+    note: 'Updates and behind-the-scenes. Messages are open here too.',
+    href: links.facebook,
+    external: true,
+    cta: 'Open Facebook',
   },
 ];
 
@@ -95,7 +117,7 @@ export default () => {
         mainEntity: {
           '@id': personId,
           contactPoint: [
-            { '@type': 'ContactPoint', contactType: 'project enquiries', telephone: `+${site.whatsapp}`, email: site.email, availableLanguage: ['Arabic', 'English'] },
+            ...site.phones.map((n) => ({ '@type': 'ContactPoint', contactType: 'project enquiries', telephone: `+${n}`, email: site.email, availableLanguage: ['Arabic', 'English'] })),
           ],
         },
       },

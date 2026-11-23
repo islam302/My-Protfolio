@@ -1,5 +1,5 @@
 import { existsSync } from 'node:fs';
-import { html, raw, cx } from '../lib/html.js';
+import { html, raw, cx, keepHyphens } from '../lib/html.js';
 import { abs, breadcrumbLd, personId } from '../lib/seo.js';
 import { site, links } from '../data/site.js';
 import { projects, getProject } from '../data/projects.js';
@@ -162,7 +162,7 @@ function page(p, i) {
       <header class="case-hero">
         <div class="case-hero__text">
           <div class="case-hero__brand">${logoBadge(p)}<p class="eyebrow">${p.label}</p></div>
-          <h1 class="display case-hero__title">${p.title}</h1>
+          <h1 class="display case-hero__title">${keepHyphens(p.title)}</h1>
           <p class="lead case-hero__lead">${p.tagline}</p>
           <p class="case-hero__summary">${p.summary}</p>
         </div>
@@ -198,7 +198,7 @@ function page(p, i) {
     <div class="container">
       <div class="case-features__head">
         <p class="eyebrow">03 · What was built</p>
-        <h2 class="display display--m" id="built">Inside <span class="case-accent">${p.title}</span></h2>
+        <h2 class="display display--m" id="built">Inside <span class="case-accent">${keepHyphens(p.title)}</span></h2>
       </div>
       <ol class="grid grid--3 case-feature-list">
         ${p.features.map((f, n) => html`<li class="case-feature" data-reveal style="--d:${(n % 3) * 0.08}s">

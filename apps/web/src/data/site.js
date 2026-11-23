@@ -20,8 +20,13 @@ export const site = {
   location: { country: 'Egypt', countryCode: 'EG' },
   company: { name: 'ETQAN', url: 'https://www.etqanpp.com' },
   email: 'admin@etqanpp.com',
-  whatsapp: '201505858198',
+  // Phone + WhatsApp numbers, international format without "+". The first one is the
+  // primary: every WhatsApp button and the brief form open a chat with it.
+  phones: ['201013919821', '201505858198'],
+  whatsapp: '201013919821',
   instagram: 'islam__badran',
+  linkedin: 'https://www.linkedin.com/in/islam-badran-39a577225/',
+  facebook: 'https://www.facebook.com/profile.php?id=61591731281871',
   ogImage: '/images/og-default.jpg',
 };
 
@@ -30,6 +35,8 @@ export const links = {
   whatsapp: (text = 'Hi Islam, I’d like to discuss a project.') =>
     `https://wa.me/${site.whatsapp}?text=${encodeURIComponent(text)}`,
   instagram: `https://www.instagram.com/${site.instagram}/`,
+  linkedin: site.linkedin,
+  facebook: site.facebook,
 };
 
 /** Primary navigation — rendered as the white "tag" stickers in the header. */

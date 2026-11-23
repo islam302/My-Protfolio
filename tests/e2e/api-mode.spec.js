@@ -116,7 +116,7 @@ test.describe('API mode: submit', () => {
     expect(openIdx, 'window.open was called').toBeGreaterThan(fetchIdx);
     expect(calls[fetchIdx].keepalive).toBe(true);
     expect(calls[fetchIdx].credentials).toBe('same-origin');
-    expect(calls[openIdx].url).toMatch(/^https:\/\/wa\.me\/201505858198\?text=/);
+    expect(calls[openIdx].url).toMatch(/^https:\/\/wa\.me\/201013919821\?text=/);
     await expect(page.locator('.pg-form__status')).toContainText('Opening WhatsApp');
   });
 

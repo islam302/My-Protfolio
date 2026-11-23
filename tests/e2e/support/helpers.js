@@ -2,7 +2,7 @@
 /** Shared test data + helpers for the apps/web E2E suites. */
 import { test as base, expect } from '@playwright/test';
 
-/** The 7 case studies, in the order of apps/web/src/data/projects.js. */
+/** The 8 case studies, in the order of apps/web/src/data/projects.js. */
 export const PROJECTS = [
   { slug: 'agentopia', title: 'Agentopia', cat: 'ai' },
   { slug: 'etqan-tutor', title: 'Etqan Tutor', cat: 'education' },
@@ -10,6 +10,7 @@ export const PROJECTS = [
   { slug: 'lmfoundry', title: 'LMFoundry', cat: 'ai' },
   { slug: 'qalamy-academy', title: 'Qalamy Academy', cat: 'education' },
   { slug: 'teslla-study', title: 'Teslla Study', cat: 'education' },
+  { slug: 'alreef', title: 'Alreef E-commerce', cat: 'e-commerce' },
   { slug: 'etqan', title: 'ETQAN', cat: 'web' },
 ];
 

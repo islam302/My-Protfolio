@@ -81,7 +81,7 @@ test.describe('no JavaScript', () => {
   test('home renders the plain index with links to every case study', async ({ page }) => {
     await page.goto('/');
     await expect(page.locator('h1')).toBeVisible();
-    await expect(page.locator('.home-index__cases a')).toHaveCount(7);
+    await expect(page.locator('.home-index__cases a')).toHaveCount(8);
     await expect(page.locator('.home-index__cases a').first()).toBeVisible();
   });
 });

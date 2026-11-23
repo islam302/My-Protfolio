@@ -337,11 +337,17 @@ function entrance() {
 }
 
 /** Pull the dive clip in as a blob after first paint: single-keyframe clips stall on streamed seeks. */
+/** Resolves when the dive clip can play (or fails); null until the download starts. */
+let clipLoad = null;
 function loadDiveClip() {
   const url = trans.dataset.src;
-  if (REDUCED || !url) return;
-  trans.addEventListener('loadeddata', () => { transReady = true; }, { once: true });
-  fetch(url)
+  if (clipLoad || REDUCED || !url) return;
+  clipLoad = new Promise((resolve) => {
+    trans.addEventListener('loadeddata', () => { transReady = true; resolve(); }, { once: true });
+    trans.addEventListener('error', () => resolve(), { once: true });
+  });
+  // Low priority: it must not compete with the hero photo and fonts.
+  fetch(url, { priority: 'low' })
     .then((r) => { if (!r.ok) throw new Error(r.status); return r.blob(); })
     .then((b) => { trans.src = URL.createObjectURL(b); })
     .catch(() => { trans.src = url; });
@@ -426,6 +432,9 @@ async function toCase() {
   if (busy || mode !== 'hero') return;
   busy = true;
   body.classList.add('busy');
+  // On a slow connection the clip may still be downloading: keep the hero on screen
+  // and wait for it a little rather than skipping the dive animation.
+  if (!REDUCED && !transReady && clipLoad) await Promise.race([clipLoad, wait(3000)]);
   cur = 0;
   fillCase(0);
   heroOut();
@@ -681,6 +690,7 @@ badges.forEach((b) => b.querySelector('.hit').addEventListener('pointerenter', (
 caseOnly.forEach((el) => { el.inert = true; });
 place('hero');
 fillCase(0);
+loadDiveClip(); // start the 1 MB clip download now (low priority) so it is ready before the first swipe
 const plateReady = plate.complete && plate.naturalWidth
   ? Promise.resolve()
   : new Promise((r) => { plate.addEventListener('load', r, { once: true }); plate.addEventListener('error', r, { once: true }); });

@@ -93,7 +93,11 @@ function activateScreen(n) {
      still fits between the tags (66u) and the bottom (28u); otherwise scale
      down until it does.
    Mobile: the photo sits at the bottom; in case mode the laptop fills the
-     space left under the ticket + description and above prev/next. */
+     space left under the ticket + description and above prev/next.
+   Mobile dive (the clip plays): the clip is framed for a wide screen (the
+     laptop flies out to the right, up into the top fade), so the frame first
+     widens to show ~1100 of its 1440 units, centred where the laptop will land,
+     then settles into the case pose. */
 function pose(m) {
   const W = innerWidth;
   const H = innerHeight;
@@ -117,6 +121,12 @@ function pose(m) {
   if (m === 'hero') {
     const s = Math.min(W / 650, (0.62 * H) / FRAME_H);
     return { s, x: W / 2 - 760 * s, y: H - 790 * s };
+  }
+  if (m === 'dive') {
+    const c = pose('case');
+    const s = Math.min(W / 1100, c.s);
+    const ly = (LAPTOP_TOP_MOBILE + LAPTOP_BOTTOM) / 2; // keep the laptop's centre where the case pose puts it
+    return { s, x: W / 2 - (FRAME_W / 2) * s, y: c.y + ly * (c.s - s) };
   }
   const navH = 0.022 * H + 42 + 22;
   const uiBottom = 62 + ticket.offsetHeight + 18 + Math.max(60, desc.offsetHeight) + 14;
@@ -142,7 +152,8 @@ function fitHero(p) {
 function place(m) {
   const p = pose(m);
   frame.style.transform = `translate(${p.x}px,${p.y}px) scale(${p.s})`;
-  frame.classList.toggle('m-case', m === 'case');
+  // The dive uses the case masks too: the hero's deep top fade would swallow the rising laptop.
+  frame.classList.toggle('m-case', m === 'case' || m === 'dive');
   stage.classList.toggle('m-case', m === 'case');
   frame.classList.toggle('d-fade', !isMobile());
   frame.classList.toggle('m-fade', isMobile());
@@ -399,10 +410,27 @@ async function toCase() {
     cut.getAnimations().forEach((a) => a.cancel());
     cut.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 260, easing: 'ease-out', fill: 'forwards' })
       .finished.then(() => { cut.style.opacity = 0; }).catch(ignore);
-    root.style.setProperty('--glide', '1.6s');
     frame.classList.add('glide');
-    place('case');
-    await playEased();
+    if (isMobile()) {
+      // Widen to the whole stage while the laptop flies, then settle into the case pose.
+      root.style.setProperty('--glide', '.75s');
+      place('dive');
+      let settled = false;
+      const settleCase = () => {
+        if (settled) return;
+        settled = true;
+        root.style.setProperty('--glide', '1s');
+        place('case');
+      };
+      const played = playEased();
+      wait(750).then(settleCase);
+      await played;
+      settleCase(); // a clip that ended early (or never played) must still land in the case pose
+    } else {
+      root.style.setProperty('--glide', '1.6s');
+      place('case');
+      await playEased();
+    }
     trans.pause();
     await fadeIn(caseplate, 220, 'ease-out');
     trans.style.opacity = 0;

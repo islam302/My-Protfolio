@@ -40,7 +40,7 @@ x-api-env: &api-env
 
 services:
   db:
-    image: postgres:17.12-alpine3.24
+    image: postgres:18.6-alpine3.24
     <<: *hardening
     user: "70:70"                      # postgres uid/gid in the alpine image -> no chown/gosu, no caps needed
     environment:

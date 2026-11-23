@@ -1,0 +1,6 @@
+/* Applied by toHaveScreenshot (stylePath) to both the reference and the rebuilt site, identically.
+   <video> is the home "dive" clip: it is transparent in the hero state, but its decoded frame
+   timing is non-deterministic, so it is never part of the comparison. */
+video { visibility: hidden !important; }
+/* Text caret / focus rings from a stray focus would be noise. */
+*:focus { outline: none !important; }

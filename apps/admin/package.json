@@ -1,0 +1,10 @@
+{
+  "name": "@portfolio/admin",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Admin panel for portfolio inquiries (static, served at /admin/).",
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/build.mjs"
+  }
+}

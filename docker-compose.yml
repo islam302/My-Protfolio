@@ -1,0 +1,176 @@
+# Local production-like stack: nginx (site + /admin/ + /api proxy) -> API -> Postgres/Redis.
+#
+#   cp .env.example .env            # then fill in the secrets (see comments in it)
+#   docker compose up -d --build
+#   open http://localhost:8080
+#   docker compose run --rm api node src/cli/create-admin.js   # ADMIN_EMAIL/ADMIN_PASSWORD, see DEPLOYMENT.md
+#   docker compose down             # add -v to also delete the database volume
+#
+# Only `web` publishes a port (bound to 127.0.0.1 by default). db/redis live on an
+# internal network with no route to the outside world.
+# Dev conveniences (DB/Redis ports, API docs): docker-compose.dev.yml.
+
+name: portfolio
+
+x-logging: &logging
+  driver: json-file
+  options:
+    max-size: "10m"
+    max-file: "5"
+
+x-hardening: &hardening
+  read_only: true
+  cap_drop: [ALL]
+  security_opt: ["no-new-privileges:true"]
+
+x-api-env: &api-env
+  NODE_ENV: production
+  PORT: "3000"
+  HOST: 0.0.0.0
+  DATABASE_URL: postgres://${POSTGRES_USER:-portfolio}:${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}@db:5432/${POSTGRES_DB:-portfolio}
+  DATABASE_POOL_MAX: ${DATABASE_POOL_MAX:-10}
+  REDIS_URL: redis://:${REDIS_PASSWORD:?set REDIS_PASSWORD in .env}@redis:6379/0
+  PUBLIC_ORIGIN: ${PUBLIC_ORIGIN:-http://localhost:8080}
+  CORS_ORIGINS: ${CORS_ORIGINS:-}
+  TRUST_PROXY: ${TRUST_PROXY:-1}
+  IP_HASH_SECRET: ${IP_HASH_SECRET:?set IP_HASH_SECRET in .env (>=32 chars)}
+  SESSION_COOKIE_SECURE: ${SESSION_COOKIE_SECURE:-true}
+  API_DOCS: ${API_DOCS:-false}
+  LOG_LEVEL: ${LOG_LEVEL:-info}
+
+services:
+  db:
+    image: postgres:17.12-alpine3.24
+    <<: *hardening
+    user: "70:70"                      # postgres uid/gid in the alpine image -> no chown/gosu, no caps needed
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-portfolio}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}
+      POSTGRES_DB: ${POSTGRES_DB:-portfolio}
+      POSTGRES_INITDB_ARGS: --auth-host=scram-sha-256
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    tmpfs:
+      - /var/run/postgresql:uid=70,gid=70,mode=0775
+      - /tmp:uid=70,gid=70,mode=1777
+    shm_size: 128m
+    networks: [backend]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U \"$${POSTGRES_USER}\" -d \"$${POSTGRES_DB}\" -h 127.0.0.1"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+      start_period: 10s
+    deploy:
+      resources:
+        limits: { cpus: "1.0", memory: 512M, pids: 200 }
+    restart: unless-stopped
+    logging: *logging
+
+  redis:
+    image: redis:8.10.3-alpine3.23
+    <<: *hardening
+    user: "999:1000"                   # redis user in the alpine image
+    # No persistence: it only holds rate-limit counters.
+    command:
+      - redis-server
+      - --requirepass
+      - ${REDIS_PASSWORD:?set REDIS_PASSWORD in .env}
+      - --save
+      - ""
+      - --appendonly
+      - "no"
+      - --maxmemory
+      - 64mb
+      - --maxmemory-policy
+      - volatile-ttl
+      - --protected-mode
+      - "yes"
+    tmpfs:
+      - /data:uid=999,gid=1000
+    networks: [backend]
+    healthcheck:
+      test: ["CMD-SHELL", "REDISCLI_AUTH=\"$$REDIS_PASSWORD\" redis-cli ping | grep -q PONG"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    environment:
+      REDIS_PASSWORD: ${REDIS_PASSWORD}   # only for the healthcheck's redis-cli
+    deploy:
+      resources:
+        limits: { cpus: "0.5", memory: 128M, pids: 100 }
+    restart: unless-stopped
+    logging: *logging
+
+  migrate:
+    image: ${API_IMAGE:-portfolio-api:local}
+    build:
+      context: .
+      dockerfile: infrastructure/docker/api.Dockerfile
+    <<: *hardening
+    command: ["node", "src/db/migrate-cli.js"]
+    environment: *api-env
+    tmpfs: [/tmp]
+    networks: [backend]
+    depends_on:
+      db: { condition: service_healthy }
+    restart: "no"
+    healthcheck:
+      disable: true
+    logging: *logging
+
+  api:
+    image: ${API_IMAGE:-portfolio-api:local}
+    build:
+      context: .
+      dockerfile: infrastructure/docker/api.Dockerfile
+    <<: *hardening
+    environment: *api-env
+    tmpfs: [/tmp]
+    networks: [backend, frontend]
+    expose: ["3000"]
+    depends_on:
+      migrate: { condition: service_completed_successfully }
+      redis: { condition: service_healthy }
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/api/health').then(r=>process.exit(r.ok?0:1),()=>process.exit(1))"]
+      interval: 15s
+      timeout: 3s
+      retries: 3
+      start_period: 20s
+    deploy:
+      resources:
+        limits: { cpus: "1.0", memory: 384M, pids: 200 }
+    stop_grace_period: 15s
+    restart: unless-stopped
+    logging: *logging
+
+  web:
+    image: ${WEB_IMAGE:-portfolio-web:local}
+    build:
+      context: .
+      dockerfile: infrastructure/docker/web.Dockerfile
+      args:
+        SITE_URL: ${SITE_URL:-https://islambadran.com}
+        PUBLIC_API_URL: ${PUBLIC_API_URL-/api}
+    <<: *hardening
+    ports:
+      - "${WEB_BIND:-127.0.0.1}:${WEB_PORT:-8080}:8080"
+    tmpfs:
+      - /tmp:uid=101,gid=101
+    networks: [frontend]
+    depends_on:
+      api: { condition: service_healthy }
+    deploy:
+      resources:
+        limits: { cpus: "0.5", memory: 128M, pids: 100 }
+    restart: unless-stopped
+    logging: *logging
+
+networks:
+  frontend: {}
+  backend:
+    internal: true        # no egress, not reachable from the host
+
+volumes:
+  db-data: {}

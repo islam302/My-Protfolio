@@ -1,0 +1,34 @@
+{
+  "name": "@portfolio/api",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Inquiry + admin API for the portfolio (Fastify, PostgreSQL).",
+  "type": "module",
+  "engines": {
+    "node": ">=22.12"
+  },
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "test": "node --test --test-concurrency=1 \"test/**/*.test.js\"",
+    "db:migrate": "node src/db/migrate-cli.js",
+    "admin:create": "node src/cli/create-admin.js"
+  },
+  "dependencies": {
+    "@fastify/cookie": "^11.1.5",
+    "@fastify/cors": "^11.4.3",
+    "@fastify/helmet": "^13.2.0",
+    "@fastify/rate-limit": "^11.3.0",
+    "@fastify/swagger": "^9.9.5",
+    "@fastify/swagger-ui": "^6.1.5",
+    "@portfolio/validation": "*",
+    "fastify": "^5.12.8",
+    "ioredis": "^6.1.0",
+    "pg": "^8.23.1",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@electric-sql/pglite": "^0.6.0"
+  }
+}

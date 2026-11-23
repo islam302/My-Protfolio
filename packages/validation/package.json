@@ -1,0 +1,17 @@
+{
+  "name": "@portfolio/validation",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Shared contact/inquiry rules used by the web build, the browser form and the API.",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.js",
+    "./constants": "./src/constants.js"
+  },
+  "scripts": {
+    "test": "node --test \"test/**/*.test.js\""
+  },
+  "dependencies": {
+    "zod": "^4.6.7"
+  }
+}

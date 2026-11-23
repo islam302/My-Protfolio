@@ -1,0 +1,7 @@
+[INFO] list rendered 3 rows; names shown literally: ["javascript:window.__xss=3//","\"><svg onload=window.__xss=2>","<img src=x onerror=\"window.__xss=(window.__xss||0)+1\">"]
+[PASS] payload execution: window.__xss=undefined, dialogs=0
+[PASS] injected elements in list/detail DOM: 0
+[PASS] saved note round-trips as plain text in <textarea>: "<img src=x onerror=window.__xss=8>"
+[PASS] requests to non-loopback/other origins: none
+
+Summary: admin UI renders stored payloads inertly (textContent / value only)

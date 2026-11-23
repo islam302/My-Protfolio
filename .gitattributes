@@ -1,5 +1,8 @@
-* text=auto
-*.js text eol=lf
-*.json text eol=lf
-*.html text eol=lf
-*.css text eol=lf
+* text=auto eol=lf
+*.webp binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.ico binary
+*.mp4 binary
+*.woff2 binary

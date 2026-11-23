@@ -1,0 +1,43 @@
+# poc-api.mjs BEFORE the SEC-01 fix.
+# Below the separator: the first full run. That version of RACE-lockout checked only the audit-log order. It missed the bug (no lockout audit row was written at all), so it showed PASS.
+# The instrumented re-run (UPDATE counting plus locked_until snapshots), on the same unfixed code, printed:
+[VULN] RACE-lockout: 25 concurrent wrong guesses + 1 correct (threshold 10): failure-accounting UPDATEs applied=25, wrong->401 x25, correct login -> 200 AFTER the account had been locked (UPDATE #10 set locked_until; success at UPDATE #26 cleared it); lockout audit rows=0; final failed_attempts=0, locked=false; sequence=open>open>open>open>open>open>open>open>open>locked>locked>locked>locked>locked>locked>locked>locked>locked>locked>locked>locked>locked>locked>locked>locked>success(unlocked)
+Summary (core): 33 checks, 26 pass, 1 vuln (RACE-lockout), 6 info
+# ---- first full run ----
+[PASS] SQLI-q: q payloads -> statuses 200,200,200,200,200,200,200, every result total=0, table intact (2 rows)
+[PASS] SQLI-id: id payloads -> 400,400,400,400 (uuid schema rejects before SQL)
+[PASS] SQLI-sort/page: sort injection -> 400, pageSize=100000 -> 400
+[PASS] SQLI-body: SQL in body stored literally (201, name="Robert'); DROP TABLE inquiries;--")
+[PASS] BODY-odd: 17KiB->413, form->415, text/plain->415, json;charset=utf-16->201, malformed->400, 5000-deep array->400, top-level array->400, object-typed field->400, NUL byte->201 (stripped)
+[PASS] PROTO: body proto keys -> 400,400,400, query proto keys -> 400,400, Object.prototype.polluted=undefined
+[PASS] MASS-ASSIGN: create with status/notes/ip_hash -> 400; patch with createdAt/id -> 400
+[PASS] EXC-astral: message of 10 emoji -> 400 {"error":{"code":"VALIDATION_ERROR","message":"Request validation failed","requestId":"3b1aa57a-32b0-4924-84ef-c3fd4cb93c67","details":[{"in":"body","field":"me…
+[PASS] EXC-astral-name: name of 40 emoji (80 UTF-16 units) -> 201
+[PASS] EXC-astral-notes: notes of 2000 emoji (4000 UTF-16 units) -> 200
+[PASS] ERR-LEAK: 5 malformed probes: generic envelopes only, no stack/SQL/paths
+[PASS] AUTHZ: unauth well-formed requests -> 401,401,401,401,401,401; forged token -> 401; 5000-char token -> 401; dev app with __Host- cookie name -> 401; method override -> 401
+[INFO] IDOR: single-tenant admin model (all admins see all inquiries, documented); unknown uuid -> 404; public API exposes no read endpoint for inquiries
+[PASS] CSRF: no token 403, wrong token 403, evil Origin 403, Origin null 403, look-alike Origin 403, other session's token 403, text/plain JSON 415, logout w/o token 403, DELETE w/o token 403, login from evil Origin 403
+[PASS] COOKIE: dev Set-Cookie: pf_session=<token>; Max-Age=28800; Path=/; HttpOnly; SameSite=Strict
+[PASS] COOKIE-prod: prod Set-Cookie: __Host-pf_session=<token>; Max-Age=28800; Path=/; HttpOnly; Secure; SameSite=Strict
+[PASS] SESSION-fixation: login with planted cookie issues a fresh token (true); planted token -> 401
+[PASS] SESSION-rotation: re-login rotates: old token -> 401
+[PASS] SESSION-invalidation: after logout -> 401; after admin:create --reset -> 401
+[INFO] SESSION-entropy: token 43 chars base64url (32 random bytes = 256 bits); stored as SHA-256 only
+[PASS] LOCKOUT-normalise: 10 failures across case/whitespace variants lock the one account; correct password then -> 401
+[INFO] LOCKOUT-homoglyph: homoglyph email -> 400 (rejected by the email schema or unknown account; never matches the real admin)
+[PASS] RACE-lockout: 25 concurrent wrong guesses + 1 correct: all 25 wrong guesses were verified (lockout threshold 10), lockout audit rows=0, correct login -> 200; final failed_attempts=0, locked=false
+[PASS] XFF-trust0: TRUST_PROXY=0, rotating X-Forwarded-For: login 401,401,401,401,401,429,429,429 | inquiry 201,201,201,201,201,429,429,429 (header ignored)
+[INFO] XFF-trust1: TRUST_PROXY=1, socket=127.0.0.1, rotating X-Forwarded-For: login 401,401,401,401,401,401,401,401 (each spoofed IP gets its own bucket = expected: only safe when the single trusted hop (nginx) OVERWRITES XFF, which proxy-api.conf does) | inquiry with "spoof, real" chain 201,201,201,201,201,429,429,429 (right-most entry used)
+[PASS] HEADERS: CSP="default-src 'none';frame-ancestors 'none';base-uri 'none';form-action 'none'", XFO=SAMEORIGIN, nosniff=nosniff, cache=no-store
+[PASS] CORS-default: no CORS_ORIGINS: preflight -> 404, ACAO=absent
+[PASS] CORS-allowlist: allowlist [http://localhost:5173]: evil->none, suffix->none, null->none, allowed->http://localhost:5173 (credentials=true)
+[PASS] HOST-origin: PUBLIC_ORIGIN set; Host: evil.example + Origin: http://evil.example -> 403
+[INFO] HOST-dev-fallback: no PUBLIC_ORIGIN (dev only): Origin compared with request Host -> 200. Not browser-exploitable (a cross-site browser request carries the API's Host, and the CSRF token is still required).
+[PASS] DOCS: OpenAPI: dev 200 (no secrets in spec: true), production 404; prod HSTS=max-age=31536000; includeSubDomains
+[INFO] XSS-roundtrip: payload stored verbatim (201) and returned as JSON string (content-type application/json; charset=utf-8, nosniff=nosniff); name="<img src=x onerror=alert(document.domain)><script>alert(1)<… -> safety depends on the admin UI sink (see poc-admin-xss)
+[PASS] REDOS: loginSchema.email 0.2ms, loginSchema.email-2 0.1ms, inquiry.message clean() 0.7ms, list.q 0.1ms, genReqId 0.1ms
+[PASS] ENUM-response: known vs unknown email: identical status (401) and body (ignoring requestId): true
+[PASS] ENUM-timing: median known=131.5ms unknown=132.3ms delta=0.8ms (0.6%), n=24 each, scrypt N=2^15, in-process (no network jitter)
+
+Summary: 35 checks, 29 pass, 0 vuln, 6 info

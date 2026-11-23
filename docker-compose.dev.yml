@@ -1,0 +1,30 @@
+# Dev conveniences on top of docker-compose.yml (never use in production):
+#
+#   docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d --build
+#
+# - Postgres on 127.0.0.1:5432 and Redis on 127.0.0.1:6379, so `npm run dev`
+#   on the host can use them (DATABASE_URL=postgres://portfolio:<pw>@127.0.0.1:5432/portfolio).
+# - Swagger UI at http://localhost:8080/api/docs, debug logs.
+# - Cookies without Secure (plain http in dev).
+services:
+  db:
+    ports:
+      - "127.0.0.1:${DEV_DB_PORT:-5432}:5432"
+    networks: [backend, devhost]
+
+  redis:
+    ports:
+      - "127.0.0.1:${DEV_REDIS_PORT:-6379}:6379"
+    networks: [backend, devhost]
+
+  api:
+    environment:
+      NODE_ENV: development
+      API_DOCS: "true"
+      LOG_LEVEL: debug
+      SESSION_COOKIE_SECURE: "false"
+
+# The backend network is internal (no published ports possible), so the dev
+# port mappings need an extra, non-internal network.
+networks:
+  devhost: {}

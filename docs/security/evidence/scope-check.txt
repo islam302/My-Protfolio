@@ -1,0 +1,13 @@
+scope: warning: scope rule '::1' widened to host '::1' (scope is per-host)
+IN-SCOPE   localhost
+IN-SCOPE   http://127.0.0.1:4321/
+IN-SCOPE   http://127.0.0.1:3000/api/health
+IN-SCOPE   http://[::1]:4321/
+IN-SCOPE   app.localhost
+OUT-OF-SCOPE  islambadran.com  (islambadran.com matches an out-of-scope rule)
+OUT-OF-SCOPE  https://api.islambadran.com  (api.islambadran.com matches an out-of-scope rule)
+OUT-OF-SCOPE  etqanpp.com  (etqanpp.com matches an out-of-scope rule)
+OUT-OF-SCOPE  https://wa.me/201  (wa.me matches an out-of-scope rule)
+OUT-OF-SCOPE  example.com  (example.com matches an out-of-scope rule)
+OUT-OF-SCOPE  192.168.1.10  (192.168.1.10 matches no in-scope rule (default deny))
+OUT-OF-SCOPE  evil.example  (evil.example matches no in-scope rule (default deny))

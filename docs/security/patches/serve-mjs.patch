@@ -1,0 +1,44 @@
+--- a/apps/web/scripts/serve.mjs
++++ b/apps/web/scripts/serve.mjs
+@@ -15,6 +15,8 @@
+ const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
+ const DIST = join(ROOT, 'dist');
+ const PORT = Number(process.env.PORT) || 4321;
++// Loopback only by default (SEC-04); WEB_HOST=0.0.0.0 opts in to LAN access, e.g. to test on a phone.
++const HOST = process.env.WEB_HOST || '127.0.0.1';
+ const TYPES = {
+   '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=utf-8', '.js': 'text/javascript; charset=utf-8',
+   '.json': 'application/json', '.webmanifest': 'application/manifest+json', '.xml': 'application/xml', '.txt': 'text/plain',
+@@ -34,7 +36,13 @@
+ }
+ 
+ async function resolve(urlPath) {
+-  const clean = normalize(decodeURIComponent(urlPath.split('?')[0])).replace(/^(\.\.[/\\])+/, '');
++  let decoded;
++  try {
++    decoded = decodeURIComponent(urlPath.split('?')[0]);
++  } catch {
++    return null; // malformed percent-encoding (e.g. /%E0%A4%A): 404, not an unhandled rejection (SEC-02)
++  }
++  const clean = normalize(decoded).replace(/^(\.\.[/\\])+/, '');
+   let file = join(DIST, clean);
+   if (!file.startsWith(DIST)) return null;
+   try {
+@@ -49,8 +57,9 @@
+ 
+ createServer(async (req, res) => {
+   const path = req.url.split('?')[0];
+-  // Directory URLs without a trailing slash redirect, like most static hosts.
+-  if (!extname(path) && !path.endsWith('/')) {
++  // Directory URLs without a trailing slash redirect, like most static hosts. Only a plain
++  // same-origin path may be echoed into Location: "//host/…" or "/\host/…" would leave the site (SEC-03).
++  if (!extname(path) && !path.endsWith('/') && /^\/(?![/\\])/.test(path) && !path.includes('\\')) {
+     const dir = await resolve(path + '/');
+     if (dir) { res.writeHead(301, { Location: path + '/' }); return res.end(); }
+   }
+@@ -61,4 +70,4 @@
+   }
+   res.writeHead(200, { 'Content-Type': TYPES[extname(file)] || 'application/octet-stream', 'Cache-Control': 'no-cache' });
+   res.end(await readFile(file));
+-}).listen(PORT, () => console.log(`Serving dist/ at http://localhost:${PORT}`));
++}).listen(PORT, HOST, () => console.log(`Serving dist/ at http://${HOST === '0.0.0.0' ? 'localhost' : HOST}:${PORT}`));

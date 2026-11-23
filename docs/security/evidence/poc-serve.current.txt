@@ -1,0 +1,7 @@
+[VULN] SERVE-bind: }).listen(PORT, () => console.log(`Serving dist/ at http://localhost:${PORT}`));
+[PASS] SERVE-traversal: 11 traversal variants (dot-dot, %2f, %5c, double-encoding, drive letter, .git) -> none escaped dist/
+[VULN] SERVE-open-redirect: //evil.example/%2E%2E%2Fwork -> 301 Location: //evil.example/%2E%2E%2Fwork/ (browser goes to host "evil.example") | /\evil.example/%2E%2E%2Fwork -> 301 Location: /\evil.example/%2E%2E%2Fwork/ (browser goes to host "evil.example")
+[VULN] SERVE-malformed-uri: GET /%E0%A4%A -> ERROR ECONNRESET; follow-up GET / -> ERROR ECONNREFUSED (process died: unhandled rejection = one-request DoS of the dev server)
+[INFO] SERVE-headers: dev server sends no security headers (CSP/XFO/nosniff present: false/false/false); production headers come from nginx
+
+Summary: 2 vuln, 1 pass

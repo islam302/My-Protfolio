@@ -1,0 +1,7 @@
+[PASS] SERVE-bind: }).listen(PORT, HOST, () => console.log(`Serving dist/ at http://${HOST === '0.0.0.0' ? 'localhost' : HOST}:${PORT}`));
+[PASS] SERVE-traversal: 11 traversal variants (dot-dot, %2f, %5c, double-encoding, drive letter, .git) -> none escaped dist/
+[PASS] SERVE-open-redirect: no off-site Location for 4 protocol-relative probes
+[PASS] SERVE-malformed-uri: GET /%E0%A4%A -> HTTP/1.1 404 Not Found; follow-up GET / -> HTTP/1.1 200 OK
+[INFO] SERVE-headers: dev server sends no security headers (CSP/XFO/nosniff present: false/false/false); production headers come from nginx
+
+Summary: 0 vuln, 3 pass

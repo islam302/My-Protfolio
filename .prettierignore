@@ -1,0 +1,13 @@
+node_modules
+dist
+coverage
+playwright-report
+test-results
+package-lock.json
+# Original site source is kept in its approved hand-formatted style; reformatting it
+# would churn every line without changing the output (see docs/ARCHITECTURE.md).
+apps/web/src
+apps/web/scripts
+tools
+tests/visual/__snapshots__
+*.md

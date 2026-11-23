@@ -1,0 +1,33 @@
+# Production overlay for the Hetzner VM (TLS at nginx, Let's Encrypt certs):
+#
+#   docker compose -f docker-compose.yml -f docker-compose.prod.yml \
+#     --env-file /srv/portfolio/shared/.env up -d --no-build --wait
+#
+# - web publishes ONLY host 80 -> 8081 (ACME + redirect) and 443 -> 8443 (site).
+#   Docker-published ports bypass ufw, which is why no other service publishes
+#   anything; the Hetzner Cloud Firewall is the outer filter.
+# - Certificates and ACME webroot live outside the release dir, in
+#   ${PORTFOLIO_SHARED} (default /srv/portfolio/shared), so releases can be
+#   switched/rolled back without touching them.
+# - Images come from GHCR, pinned by digest (API_IMAGE / WEB_IMAGE, set by the
+#   deploy script) — the build sections of the base file are not used; a
+#   digest is immutable, so the default pull_policy (missing) is correct.
+services:
+  web:
+    ports: !override
+      - "${WEB_HTTP_BIND:-0.0.0.0}:80:8081"
+      - "${WEB_HTTPS_BIND:-0.0.0.0}:443:8443"
+    volumes:
+      - ./infrastructure/nginx/tls.example.conf:/etc/nginx/conf.d/tls.conf:ro
+      - ${PORTFOLIO_SHARED:-/srv/portfolio/shared}/certs:/etc/nginx/certs:ro
+      - ${PORTFOLIO_SHARED:-/srv/portfolio/shared}/acme:/var/www/acme:ro
+
+  api:
+    environment:
+      PUBLIC_ORIGIN: ${PUBLIC_ORIGIN:?set PUBLIC_ORIGIN (https://your-domain) in .env}
+      SESSION_COOKIE_SECURE: "true"
+      API_DOCS: "false"
+
+  migrate:
+    environment:
+      PUBLIC_ORIGIN: ${PUBLIC_ORIGIN:?set PUBLIC_ORIGIN (https://your-domain) in .env}

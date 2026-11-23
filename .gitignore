@@ -1,5 +1,16 @@
 node_modules/
 dist/
+coverage/
 .DS_Store
 .env
-.env.local
+.env.*
+!.env.example
+*.log
+# Playwright
+test-results/
+playwright-report/
+blob-report/
+.cache/
+# Local archive of the old implementation (see docs/PROJECT_AUDIT.md)
+_archive/
+tests/.cache/

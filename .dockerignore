@@ -1,0 +1,50 @@
+# Keep the build context small and free of secrets. The Dockerfiles copy only
+# what they need; this list is the second line of defence.
+
+# VCS / tooling
+.git
+.github
+.gitattributes
+.editorconfig
+.prettier*
+.vscode
+.idea
+**/.DS_Store
+
+# Secrets — never in an image
+.env
+.env.*
+!.env.example
+**/*.pem
+**/*.key
+**/*.p12
+**/id_rsa*
+
+# Dependencies and build output (rebuilt inside the image)
+**/node_modules
+**/dist
+coverage
+playwright-report
+test-results
+blob-report
+.cache
+*.log
+
+# Not needed by any image
+docs
+tests
+tools
+scripts
+infrastructure/deployment
+infrastructure/monitoring
+docker-compose*.yml
+_archive
+hero-video
+# root-level media only (patterns are anchored to the context root)
+/*.mp4
+/*.png
+apps/api/test
+apps/web/README.original.md
+
+# Archival source media (never needed in an image)
+assets/

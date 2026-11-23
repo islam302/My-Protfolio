@@ -1,0 +1,91 @@
+/* =====================================================================
+   /work/ index + project cards (cards are reused on case-study pages).
+   Uses site.css tokens only. Each card sets --p-bg / --p-ac / --p-fg.
+   ===================================================================== */
+
+/* ---------- hero ---------- */
+.work-hero { padding-top: clamp(28px, 4vw, 48px); }
+.work-hero .breadcrumbs { margin-bottom: clamp(32px, 6vw, 72px); }
+.work-hero .display .script { font-size: .8em; text-transform: none; letter-spacing: 0; display: inline-block; transform: rotate(-4deg) translateY(-.06em); }
+.work-hero .lead { max-width: 54ch; }
+.work-hero__stats {
+  display: flex; flex-wrap: wrap; gap: 10px 28px; list-style: none; margin-top: 32px;
+  font-size: var(--step--1); font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--fg-3);
+}
+.work-hero__stats b { font-family: var(--font-display); font-weight: 400; font-size: 2.1em; letter-spacing: 0; color: var(--fg); margin-right: .25em; vertical-align: -.12em; }
+
+/* ---------- filter ---------- */
+.work-index { padding-bottom: var(--section); }
+.work-target { display: block; height: 0; scroll-margin-top: 90px; }
+.work-filter { position: sticky; top: 64px; z-index: 5; margin: 0 calc(-1 * var(--gutter)) clamp(24px, 3vw, 36px); padding: 12px var(--gutter);
+  background: color-mix(in srgb, var(--navy-900) 92%, transparent); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+.work-filter ul { display: flex; gap: 8px; list-style: none; overflow-x: auto; scrollbar-width: none; padding: 4px 2px; }
+.work-filter ul::-webkit-scrollbar { display: none; }
+.work-filter__btn {
+  display: inline-flex; align-items: center; gap: 8px; height: 40px; padding: 0 16px; border-radius: 999px; border: 1.5px solid var(--line);
+  font-weight: 700; font-size: 14.5px; text-decoration: none; white-space: nowrap; color: var(--fg-2);
+  transition: background-color .2s, color .2s, border-color .2s, transform .2s var(--ease);
+}
+.work-filter__btn:hover { color: var(--fg); border-color: var(--fg-3); transform: translateY(-1px); }
+.work-filter__btn[aria-current='true'] { background: var(--white); color: var(--ink); border-color: var(--white); }
+.work-filter__n { font-size: 11px; font-weight: 800; min-width: 20px; height: 20px; padding: 0 6px; display: inline-grid; place-items: center; border-radius: 99px; background: var(--line); }
+.work-filter__btn[aria-current='true'] .work-filter__n { background: var(--sky); color: var(--navy-900); }
+/* without JS, an active :target chip replaces "All" as the highlighted one */
+html:not(.js) .work-target:target ~ .work-filter [data-filter='all'] { background: transparent; color: var(--fg-2); border-color: var(--line); }
+
+/* ---------- grid ---------- */
+.work-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 330px), 1fr)); gap: clamp(18px, 2.4vw, 30px); list-style: none; }
+
+/* ---------- card ---------- */
+.work-card {
+  position: relative; display: flex; flex-direction: column; border-radius: var(--radius-lg); overflow: hidden;
+  background: color-mix(in srgb, var(--white) 4%, transparent); border: 1px solid var(--line);
+  transition: transform .4s var(--ease), border-color .3s, box-shadow .4s var(--ease);
+}
+.work-card[hidden] { display: none; }
+.work-card:hover { transform: translateY(-4px); border-color: color-mix(in srgb, var(--p-ac) 55%, transparent); box-shadow: var(--card-shadow); }
+.work-card:focus-within { outline: 2px solid var(--sky); outline-offset: 3px; }
+.work-card:focus-within .work-card__link:focus-visible { outline: none; }
+
+.work-card__media {
+  position: relative; aspect-ratio: 16 / 10; overflow: hidden; display: flex; align-items: flex-end; justify-content: center;
+  padding: 7% 7% 0; background:
+    radial-gradient(120% 90% at 85% 0%, color-mix(in srgb, var(--p-ac) 32%, transparent), transparent 60%),
+    var(--p-bg);
+}
+.work-card__media img {
+  width: 100%; height: auto; border-radius: 8px 8px 0 0; box-shadow: 0 -2px 30px rgba(0, 0, 0, .3);
+  transform-origin: 50% 100%; transition: transform .6s var(--ease);
+}
+.work-card:hover .work-card__media img { transform: scale(1.035); }
+
+/* phone-shaped covers: show the top of the screen rising from the bottom edge, never squashed */
+.work-card--mobile .work-card__media { padding: 8% 0 0; }
+.work-card--mobile .work-card__media img { width: auto; height: 118%; max-width: 62%; object-fit: cover; object-position: top; border-radius: 22px 22px 0 0; flex: none; align-self: flex-start; }
+.work-card--light .work-card__media img { box-shadow: 0 -2px 30px rgba(0, 0, 0, .14); }
+
+.work-card__body { display: flex; flex-direction: column; gap: 10px; flex: 1; padding: 20px 22px 22px; }
+.work-card__meta { display: flex; align-items: center; gap: 12px; min-width: 0; }
+.work-card__label { font-size: 11.5px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--fg-3); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.work-card__title { font-family: var(--font-display); font-weight: 400; text-transform: uppercase; font-size: var(--step-2); line-height: 1; letter-spacing: 0; margin-top: 4px; }
+.work-card__link { text-decoration: none; }
+.work-card__link::after { content: ''; position: absolute; inset: 0; z-index: 1; border-radius: inherit; }
+.work-card__tagline { color: var(--fg-2); font-size: 15.5px; line-height: 1.45; }
+.work-card__more { margin-top: auto; padding-top: 8px; display: inline-flex; align-items: center; gap: .4em; font-weight: 700; font-size: 14px; color: var(--fg); }
+.work-card__arrow { display: inline-block; transition: transform .3s var(--ease); }
+.work-card:hover .work-card__arrow { transform: translateX(4px); }
+
+/* ---------- logo sticker ---------- */
+.logo-badge {
+  flex: none; display: inline-grid; place-items: center; width: 54px; height: 54px; padding: 9px; background: var(--white);
+  box-shadow: var(--sticker-shadow); transform: rotate(-3deg);
+}
+.logo-badge img { width: 100%; height: 100%; object-fit: contain; }
+.logo-badge--sm { width: 38px; height: 38px; padding: 6px; transform: rotate(-3deg); }
+
+@media (prefers-reduced-motion: reduce) {
+  .work-card:hover, .work-card:hover .work-card__media img { transform: none; }
+}
+
+/* reveal (site.css) also sets transform; keep the hover lift once a card is in */
+.js .work-card[data-reveal].is-in:hover { transform: translateY(-4px); }

@@ -1,0 +1,213 @@
+# MANUAL production deploy to the Hetzner VM. Never runs automatically:
+# workflow_dispatch only, and the deploy job uses `environment: production`,
+# which must have required reviewers (Settings -> Environments -> production),
+# so every run waits for the owner's approval.
+#
+# Flow: build + push both images to GHCR (tag sha-<commit>, deployed BY DIGEST)
+#   -> [approval] -> copy the release bundle (compose files + infrastructure/
+#   nginx + deployment scripts) to the VM over SSH -> remote-deploy.sh pulls,
+#   backs up the DB, migrates, `up -d --wait`, smoke-tests, and rolls back to
+#   the previous images automatically if anything fails.
+#
+# Required secrets on the `production` environment:
+#   HETZNER_HOST         VM hostname or IP
+#   HETZNER_USER         deploy user on the VM (member of the docker group)
+#   HETZNER_SSH_KEY      private key (ed25519) of a key pair dedicated to CI
+#   HETZNER_KNOWN_HOSTS  pinned host key line(s), e.g. output of
+#                        `ssh-keyscan -t ed25519 <host>` VERIFIED against the
+#                        fingerprint shown in the Hetzner console
+# Optional variables (environment or repo): SITE_URL (default https://islambadran.com),
+#   DEPLOY_PATH (default /srv/portfolio), HETZNER_PORT (default 22).
+name: Deploy (manual, Hetzner)
+
+on:
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: "Git ref to deploy (release tag recommended, e.g. v2.0.0)"
+        required: true
+        default: main
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Build + push images (GHCR)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    permissions:
+      contents: read
+      packages: write
+    outputs:
+      sha: ${{ steps.meta.outputs.sha }}
+      api_ref: ${{ steps.meta.outputs.api_repo }}@${{ steps.api.outputs.digest }}
+      web_ref: ${{ steps.meta.outputs.web_repo }}@${{ steps.web.outputs.digest }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ inputs.ref }}
+          persist-credentials: false
+      - id: meta
+        shell: bash
+        env:
+          OWNER: ${{ github.repository_owner }}
+        run: |
+          owner="${OWNER,,}"   # GHCR repository names must be lowercase
+          {
+            echo "sha=$(git rev-parse HEAD)"
+            echo "api_repo=ghcr.io/$owner/portfolio-api"
+            echo "web_repo=ghcr.io/$owner/portfolio-web"
+          } >> "$GITHUB_OUTPUT"
+      - uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4.4.1
+      - name: Log in to GHCR
+        env:
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ACTOR: ${{ github.actor }}
+        run: printf '%s' "$TOKEN" | docker login ghcr.io -u "$ACTOR" --password-stdin
+      - name: Build + push API image
+        id: api
+        uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc # v7.4.0
+        with:
+          context: .
+          file: infrastructure/docker/api.Dockerfile
+          push: true
+          provenance: true
+          sbom: true
+          tags: ${{ steps.meta.outputs.api_repo }}:sha-${{ steps.meta.outputs.sha }}
+      - name: Build + push web image
+        id: web
+        uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc # v7.4.0
+        with:
+          context: .
+          file: infrastructure/docker/web.Dockerfile
+          push: true
+          provenance: true
+          sbom: true
+          build-args: |
+            SITE_URL=${{ vars.SITE_URL || 'https://islambadran.com' }}
+            PUBLIC_API_URL=/api
+          tags: ${{ steps.meta.outputs.web_repo }}:sha-${{ steps.meta.outputs.sha }}
+      - name: Trivy gate (HIGH/CRITICAL, fixable)
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
+        with:
+          image-ref: ${{ steps.meta.outputs.api_repo }}@${{ steps.api.outputs.digest }}
+          severity: HIGH,CRITICAL
+          ignore-unfixed: true
+          exit-code: "1"
+      - name: Trivy gate — web
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
+        with:
+          image-ref: ${{ steps.meta.outputs.web_repo }}@${{ steps.web.outputs.digest }}
+          severity: HIGH,CRITICAL
+          ignore-unfixed: true
+          exit-code: "1"
+
+  deploy:
+    name: Deploy to Hetzner (production)
+    needs: build
+    runs-on: ubuntu-24.04
+    environment: production          # required reviewers = manual approval
+    timeout-minutes: 20
+    permissions:
+      contents: read
+      packages: read                 # the VM pulls with this job's short-lived token
+    env:
+      SHA: ${{ needs.build.outputs.sha }}
+      API_REF: ${{ needs.build.outputs.api_ref }}
+      WEB_REF: ${{ needs.build.outputs.web_ref }}
+      DEPLOY_PATH: ${{ vars.DEPLOY_PATH || '/srv/portfolio' }}
+      SSH_PORT: ${{ vars.HETZNER_PORT || '22' }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ needs.build.outputs.sha }}
+          persist-credentials: false
+
+      - name: Validate inputs
+        shell: bash
+        run: |
+          [[ "$SHA" =~ ^[0-9a-f]{40}$ ]] || { echo "bad sha"; exit 1; }
+          re='^ghcr\.io/[a-z0-9._/-]+@sha256:[0-9a-f]{64}$'
+          [[ "$API_REF" =~ $re && "$WEB_REF" =~ $re ]] || { echo "bad image refs"; exit 1; }
+          [[ "$DEPLOY_PATH" =~ ^/[A-Za-z0-9._/-]+$ ]] || { echo "bad DEPLOY_PATH"; exit 1; }
+
+      - name: Configure SSH (pinned host key)
+        shell: bash
+        env:
+          SSH_KEY: ${{ secrets.HETZNER_SSH_KEY }}
+          KNOWN_HOSTS: ${{ secrets.HETZNER_KNOWN_HOSTS }}
+          HOST: ${{ secrets.HETZNER_HOST }}
+          USER_: ${{ secrets.HETZNER_USER }}
+        run: |
+          set -euo pipefail
+          [[ -n "$SSH_KEY" && -n "$KNOWN_HOSTS" && -n "$HOST" && -n "$USER_" ]] \
+            || { echo "::error::HETZNER_* secrets are not configured on the production environment"; exit 1; }
+          install -d -m 700 ~/.ssh
+          printf '%s\n' "$SSH_KEY" > ~/.ssh/deploy_key && chmod 600 ~/.ssh/deploy_key
+          printf '%s\n' "$KNOWN_HOSTS" > ~/.ssh/known_hosts && chmod 644 ~/.ssh/known_hosts
+          cat > ~/.ssh/config <<EOF
+          Host hetzner
+            HostName $HOST
+            User $USER_
+            Port $SSH_PORT
+            IdentityFile ~/.ssh/deploy_key
+            IdentitiesOnly yes
+            StrictHostKeyChecking yes
+            UserKnownHostsFile ~/.ssh/known_hosts
+            BatchMode yes
+            ConnectTimeout 15
+            ServerAliveInterval 15
+          EOF
+          chmod 600 ~/.ssh/config
+          ssh hetzner true   # fails here if the host key does not match
+
+      - name: Upload release bundle
+        shell: bash
+        run: |
+          # Client-side expansion is intended; all values were validated above.
+          # shellcheck disable=SC2029
+          set -euo pipefail
+          tar czf "$RUNNER_TEMP/release.tgz" docker-compose.yml docker-compose.prod.yml \
+            infrastructure/nginx infrastructure/deployment
+          # shellcheck disable=SC2029
+          ssh hetzner "mkdir -p '$DEPLOY_PATH/releases/$SHA'"
+          scp -q "$RUNNER_TEMP/release.tgz" "hetzner:$DEPLOY_PATH/releases/$SHA.tgz"
+          # shellcheck disable=SC2029
+          ssh hetzner "tar xzf '$DEPLOY_PATH/releases/$SHA.tgz' -C '$DEPLOY_PATH/releases/$SHA' && rm -f '$DEPLOY_PATH/releases/$SHA.tgz'"
+
+      - name: Deploy (pull, backup, migrate, up --wait, smoke test, auto-rollback)
+        shell: bash
+        env:
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ACTOR: ${{ github.actor }}
+        run: |
+          # shellcheck disable=SC2029  # client-side expansion intended; values validated
+          set -uo pipefail
+          [[ "$ACTOR" =~ ^[A-Za-z0-9-]+(\[bot\])?$ ]] || { echo "bad actor"; exit 1; }
+          # Short-lived registry login on the VM (token expires with this job).
+          # shellcheck disable=SC2029
+          printf '%s' "$TOKEN" | ssh hetzner "docker login ghcr.io -u '$ACTOR' --password-stdin" >/dev/null
+          # shellcheck disable=SC2029
+          ssh hetzner "PORTFOLIO_ROOT='$DEPLOY_PATH' bash '$DEPLOY_PATH/releases/$SHA/infrastructure/deployment/remote-deploy.sh' '$DEPLOY_PATH/releases/$SHA' '$API_REF' '$WEB_REF'"
+          rc=$?
+          ssh hetzner "docker logout ghcr.io" >/dev/null || true
+          exit $rc
+
+      - name: Summary
+        if: always()
+        run: |
+          {
+            echo "### Deploy ${{ job.status }}"
+            echo "- commit: \`$SHA\`"
+            echo "- api: \`$API_REF\`"
+            echo "- web: \`$WEB_REF\`"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Remove SSH key
+        if: always()
+        run: rm -f ~/.ssh/deploy_key

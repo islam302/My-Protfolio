@@ -1,14 +1,39 @@
 {
-  "name": "my-portfolio",
-  "version": "1.0.0",
-  "description": "Personal portfolio website",
+  "name": "islam-badran-portfolio",
+  "version": "2.0.0",
+  "private": true,
+  "description": "Monorepo: static portfolio site, inquiry API, admin panel, shared validation.",
   "type": "module",
+  "engines": {
+    "node": ">=22.12"
+  },
+  "packageManager": "npm@10.9.2",
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
   "scripts": {
-    "dev": "vite",
-    "build": "npx vite build",
-    "preview": "npx vite preview"
+    "dev": "node scripts/dev.mjs",
+    "build": "npm run build -w @portfolio/web && npm run build -w @portfolio/admin --if-present",
+    "check": "npm run check -w @portfolio/web",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "npm run test --workspaces --if-present",
+    "test:e2e": "playwright test",
+    "db:migrate": "npm run db:migrate -w @portfolio/api",
+    "admin:create": "npm run admin:create -w @portfolio/api"
   },
   "devDependencies": {
-    "vite": "^5.0.0"
+    "@eslint/js": "^10.0.1",
+    "@playwright/test": "^1.65.1",
+    "@types/node": "^26.6.6",
+    "@types/pg": "^8.23.1",
+    "eslint": "^10.15.0",
+    "eslint-plugin-security": "^4.2.1",
+    "globals": "^17.14.0",
+    "prettier": "^3.10.1",
+    "typescript": "^7.0.2"
   }
 }

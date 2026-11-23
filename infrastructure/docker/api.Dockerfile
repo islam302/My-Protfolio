@@ -14,7 +14,7 @@
 # ---------------------------------------------------------------------------
 # 1) deps: production dependencies for @portfolio/api only
 # ---------------------------------------------------------------------------
-FROM node:22.23.5-alpine3.24 AS deps
+FROM node:26.13.1-alpine3.24 AS deps
 WORKDIR /app
 
 # Copy only manifests first (layer cache). Every workspace manifest is copied so
@@ -37,7 +37,7 @@ RUN --mount=type=cache,target=/root/.npm \
 # ---------------------------------------------------------------------------
 # 2) runtime
 # ---------------------------------------------------------------------------
-FROM node:22.23.5-alpine3.24 AS runtime
+FROM node:26.13.1-alpine3.24 AS runtime
 
 # tini = PID 1 (signal forwarding + zombie reaping).
 # Remove npm/npx/corepack/yarn: not needed at runtime (migrations and the admin

@@ -22,11 +22,25 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
 const SRC = join(ROOT, 'assets', 'source', 'projects');
 const OUT = join(ROOT, 'apps', 'web', 'public', 'images', 'projects');
 
-/** @param {string} input @param {string} output @param {number} width @param {number} quality */
+/** Width×height of an existing image (ffprobe), or null. @param {string} file */
+function sizeOf(file) {
+  if (!existsSync(file)) return null;
+  const r = spawnSync('ffprobe', ['-v', 'error', '-show_entries', 'stream=width,height', '-of', 'csv=p=0', file], { encoding: 'utf8' });
+  const [w, h] = r.stdout.trim().split(',').map(Number);
+  return w && h ? { w, h } : null;
+}
+
+/**
+ * When the output already exists, keep its exact pixel size: pages take <img> width/height
+ * from the file, so even a 1 px change in height shifts the layout below it.
+ * @param {string} input @param {string} output @param {number} width @param {number} quality
+ */
 function encode(input, output, width, quality) {
+  const keep = sizeOf(output);
+  const scale = keep && keep.w === width ? `${keep.w}:${keep.h}` : `${width}:-1`;
   const r = spawnSync('ffmpeg', [
     '-v', 'error', '-y', '-i', input,
-    '-vf', `scale=${width}:-1:flags=lanczos`,
+    '-vf', `scale=${scale}:flags=lanczos`,
     '-c:v', 'libwebp', '-quality', String(quality), '-compression_level', '6', '-preset', 'picture',
     output,
   ], { stdio: 'inherit' });

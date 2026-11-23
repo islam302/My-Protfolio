@@ -25,7 +25,8 @@ Last updated: 2026-11-23 · Branch `rebuild/monorepo` (pushed to `islam302/My-Pr
 | Performance | NOT TESTED | Lighthouse not run (not installed); measured: hero clip 1.06 MB, ETQAN 2× shot 142 KB loaded only on high-density screens |
 | Docker | PASS | Both images build; stack healthy; smoke test passes |
 | CI/CD | NOT TESTED on GitHub | Workflows pass actionlint; not yet run on GitHub |
-| Hetzner deploy | BLOCKED | Needs the VM, DNS and GitHub secrets (`DEPLOYMENT.md`) |
+| Vercel deploy (static site) | PASS | https://islam-badran-portfolio.vercel.app: `vercel.json` (build, CSP/security headers mirrored from nginx, caching); `SITE_URL` set in the Vercel production env. Verified live: pages 200, 404 page, headers, canonical/sitemap, hero clip + screenshots, no console/CSP errors. The inquiry API is not on Vercel: the form uses WhatsApp/email |
+| Hetzner deploy (full stack) | BLOCKED | Needs the VM, DNS and GitHub secrets (`DEPLOYMENT.md`) |
 | Documentation | PASS | `README.md`, `docs/*`, `docs/security/*`, `infrastructure/deployment/DEPLOYMENT.md` |
 | Production build | PASS | `npm run build` |
 

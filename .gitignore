@@ -14,3 +14,5 @@ blob-report/
 # Local archive of the old implementation (see docs/PROJECT_AUDIT.md)
 _archive/
 tests/.cache/
+# Vercel CLI link (project/org ids); .env.local is covered by .env.* above
+.vercel

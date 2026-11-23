@@ -1,0 +1,12 @@
+# Only the static site (apps/web + packages/validation) is built on Vercel.
+node_modules
+**/node_modules
+assets/source
+tests
+test-results
+playwright-report
+infrastructure
+docs
+tools
+.env
+.env.*

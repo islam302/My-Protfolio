@@ -347,9 +347,45 @@ function loadDiveClip() {
     .catch(() => { trans.src = url; });
 }
 
+/* iOS Safari (notably in Low Power Mode) only lets a <video> start inside a user
+   gesture; the dive starts the clip a few hundred ms after the swipe, outside it.
+   Unlock it on the first real gesture: play invisibly (opacity 0), then pause at 0.
+   Afterwards play() is allowed at any time. */
+let clipUnlocked = false;
+function unlockClip() {
+  if (clipUnlocked || !trans.src || mode !== 'hero' || busy) return;
+  clipUnlocked = true;
+  const p = trans.play();
+  if (!p) return;
+  p.then(() => {
+    if (mode === 'hero' && !busy) { trans.pause(); trans.currentTime = 0; }
+  }).catch(() => { clipUnlocked = false; });
+}
+['touchend', 'pointerup', 'keydown'].forEach((type) => addEventListener(type, unlockClip, { capture: true, passive: true }));
+
 /* ---------- hero → laptop dive ---------- */
-/** Play the dive clip with a speed curve: 1.8× at the ends, up to 4.2× mid-flight. */
-function playEased() {
+/* Speed curves for the dive clip: rate = max(min, base + amp·sin(π·progress)).
+   Desktop: 1.8× at the ends, up to 4.2× mid-flight (approved timing).
+   Phones: 1.1×–2.1×. Phone decoders cannot present a 24 fps clip at 4× (frames
+   were dropped exactly while the laptop leaves his hand), so the dive runs ~3 s. */
+const CURVE_DESKTOP = { min: 1.2, base: 1.8, amp: 2.4, timeout: 6000 };
+const CURVE_PHONE = { min: 1.0, base: 1.1, amp: 1.0, timeout: 9000 };
+
+/** Resolve once frame 0 is decoded after `currentTime = 0` (or after 400 ms at most). */
+function frameZero() {
+  return new Promise((resolve) => {
+    if (!trans.seeking && trans.readyState >= 2 && trans.currentTime === 0) { resolve(); return; }
+    const t = setTimeout(resolve, 400);
+    trans.addEventListener('seeked', () => { clearTimeout(t); resolve(); }, { once: true });
+  });
+}
+
+/**
+ * Play the dive clip along a speed curve.
+ * @param {{ min: number, base: number, amp: number, timeout: number }} [curve]
+ * @param {(progress: number) => void} [onProgress]
+ */
+function playEased(curve = CURVE_DESKTOP, onProgress) {
   return new Promise((resolve) => {
     let done = false;
     let timer = 0;
@@ -363,15 +399,16 @@ function playEased() {
       resolve();
     };
     trans.addEventListener('ended', finish, { once: true });
-    timer = setTimeout(finish, 6000); // never hang on a stalled clip
+    timer = setTimeout(finish, curve.timeout); // never hang on a stalled clip
     const tick = () => {
       if (done) return;
       const p = trans.currentTime / (trans.duration || 5.04);
-      trans.playbackRate = Math.max(1.2, 1.8 + 2.4 * Math.sin(Math.PI * Math.min(p * 1.08, 1)));
+      trans.playbackRate = Math.max(curve.min, curve.base + curve.amp * Math.sin(Math.PI * Math.min(p * 1.08, 1)));
+      onProgress?.(p);
       if (p >= 0.995) { finish(); return; }
       requestAnimationFrame(tick);
     };
-    trans.playbackRate = 1.8;
+    trans.playbackRate = curve.base;
     trans.play()?.catch(finish);
     requestAnimationFrame(tick);
   });
@@ -403,7 +440,11 @@ async function toCase() {
     plate.style.visibility = 'hidden';
     cut.style.opacity = 0;
   } else {
+    trans.pause(); // the gesture unlock may have left it playing (invisibly)
     trans.currentTime = 0;
+    // Phones: show the clip from its very first frame (the look down and the release
+    // of the laptop are in the first second) instead of fading in while it already plays.
+    if (isMobile()) await frameZero();
     trans.style.opacity = 1;
     trans.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 180, easing: 'ease-out' });
     nextFrame().then(nextFrame).then(() => { plate.style.visibility = 'hidden'; });
@@ -412,19 +453,19 @@ async function toCase() {
       .finished.then(() => { cut.style.opacity = 0; }).catch(ignore);
     frame.classList.add('glide');
     if (isMobile()) {
-      // Widen to the whole stage while the laptop flies, then settle into the case pose.
-      root.style.setProperty('--glide', '.75s');
+      // Widen to the whole stage while the laptop flies, then settle into the case pose
+      // once the laptop is centred in the clip (about half-way).
+      root.style.setProperty('--glide', '.9s');
       place('dive');
       let settled = false;
       const settleCase = () => {
         if (settled) return;
         settled = true;
-        root.style.setProperty('--glide', '1s');
+        root.style.setProperty('--glide', '1.3s');
         place('case');
       };
-      const played = playEased();
-      wait(750).then(settleCase);
-      await played;
+      await wait(180); // frame 0 fades in before the clip moves
+      await playEased(CURVE_PHONE, (p) => { if (p >= 0.5) settleCase(); });
       settleCase(); // a clip that ended early (or never played) must still land in the case pose
     } else {
       root.style.setProperty('--glide', '1.6s');
